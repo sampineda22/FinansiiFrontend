@@ -1,0 +1,45 @@
+@import '../../../../app/shared/shared.scss';
+
+.table-container {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.custom-table {
+    width: 100%; 
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.mat-row {
+    display: table;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mat-header-cell,
+.mat-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mat-header-cell {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+}
+
+.mat-cell {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+.mat-row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.assigned-chip{
+    background-color: #f7bb16
+}

@@ -1,0 +1,95 @@
+<style>
+    body {
+        background-image: url('assets/images/images/background.svg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* Optional: This keeps the background image fixed as the user scrolls */
+    }
+    .custom-shadow {
+        box-shadow: 0 80px 100px rgba(0, 0, 0, 0.1), 0 80px 100px rgba(0, 0, 0, 0.08);
+    }
+</style>
+
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8 ng-tns-c430-71">
+    <div class="flex sm:rounded-2xl overflow-hidden sm:bg-card ng-tns-c430-71 custom-shadow" style="width: 50%;">
+
+        <!-- First Half with Image Background -->
+        <div class="flex flex-col justify-center items-center w-1/2 relative" style="background-image: url('assets/images/images/finances.jpg'); background-size: cover; background-position: center;">
+
+            <!-- Overlay div for color layer -->
+            <div class="absolute inset-0" style="background-color: #3991b1; opacity: 0.7;"></div>
+
+            <img src="assets/images/logo/logoFinansiiDark.svg" alt="Logo Finansii" class="h-50" style="z-index: 1;">
+            <div class="text-white text-7xl font-semibold mt-4" style="z-index: 1;">finansii</div>
+        </div>
+
+        <!-- Second Half with Login Form -->
+        <div class="md:p-10 items-center text-center">
+
+            <!-- Title -->
+            <div class="mt-8 text-3xl tracking-tight leading-tight">
+                Bienvenido a
+            </div>
+
+            <!-- Logo and Text -->
+            <div class="flex items-center" style="padding-left: 20%;">
+                <img src="assets/images/logo/logoFinansii.svg" class="h-15 w-24" alt="Logo">
+                <div class="text-5xl text-center font-semibold">
+                    finansii
+                </div>
+            </div>
+
+            <h1 style="padding-top: 8%; color: rgb(155, 153, 153);">Inicia sesión con el usuario y contraseña asignado de Active Directory</h1>
+
+            <!-- Alert -->
+            <fuse-alert class="mt-8" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false" [type]="alert.type"
+                [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
+
+            <!-- Sign in form -->
+            <form class="mt-8 w-full" [formGroup]="signInForm" #signInNgForm="ngForm">
+
+                <!-- Email field -->
+                <mat-form-field class="w-full">
+                    <mat-label>Usuario</mat-label>
+                    <input id="text" matInput [formControlName]="'user'">
+                    <mat-error *ngIf="signInForm.get('user').hasError('required')">
+                        El usuario es requerido
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Password field -->
+                <mat-form-field class="w-full">
+                    <mat-label>Contraseña</mat-label>
+                    <input id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+                    <button mat-icon-button type="button"
+                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                        matSuffix>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                    </button>
+                    <mat-error>
+                        La contraseña es requerida
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Submit button -->
+                <button class="fuse-mat-button-large w-full mt-6" mat-flat-button style="background-color: #0b213a;"
+                    [disabled]="signInForm.disabled" (click)="signIn()">
+                    <span *ngIf="!signInForm.disabled" style="color: white;">
+                        Iniciar Sesión
+                    </span>
+                    <mat-progress-spinner *ngIf="signInForm.disabled" [diameter]="24"
+                        [mode]="'indeterminate'"></mat-progress-spinner>
+                </button>
+
+                <!-- Single sign-on buttons -->
+                <div class="flex items-center mt-8 space-x-4">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

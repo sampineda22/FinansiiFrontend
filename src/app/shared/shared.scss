@@ -1,0 +1,26 @@
+.dialog-content {
+    padding-top: 40px; /* Adjust this value to create space below the header */
+  }
+  
+  .dialog-header-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-image: url('../../assets/images/ui/wavy-line-header.svg'); /* Set SVG as background */
+    background-size: contain; /* Ensure SVG fills the container */
+    background-repeat: no-repeat; /* Prevent repetition */
+    background-color: rgba(28, 126, 207, 0.719);
+    border-bottom: 1px solid #ccc;
+    border-radius: 4px 4px 0 0;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex; /* Make the container flex */
+    align-items: center; /* Center items vertically */
+  }
+  
+  .dialog-title {
+    color: white; /* Set text color to white */
+    font-size: 16px; /* Set font size to 24px (adjust as needed) */
+    margin: 0; /* Remove default margin */
+  }

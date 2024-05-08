@@ -1,0 +1,15 @@
+/* card.component.css */
+.card {
+    border-radius: 20px; /* Adjust the radius to change the curvature */
+    overflow: hidden;
+    margin: 30px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+  }
+  
+  .card-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto; /* Add scrollbar if content exceeds card height */
+  }

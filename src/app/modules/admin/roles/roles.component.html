@@ -1,0 +1,102 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-2xl md:text-6xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Roles
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+
+                    <button mat-flat-button class="bg-accent mat-mdc-unelevated-button centered-button"
+                        style="color: white;" (click)="openAddRoleDialog(roleTemplate)">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                        <span class="ml-2 mr-1">Nuevo Rol</span>
+                    </button>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <app-card>
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Nombre de Rol </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="creationDate">
+                <th mat-header-cell *matHeaderCellDef> Fecha de Creación </th>
+                <td mat-cell *matCellDef="let element"> {{element.creationDate | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="creationUser">
+                <th mat-header-cell *matHeaderCellDef> Usuario de Creación </th>
+                <td mat-cell *matCellDef="let element"> {{element.creationUser}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-mini-fab style=" background-color:#f77f00;" aria-label="Editar" title="Editar">
+                        <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                    </button>
+                    &nbsp;
+                    <button mat-mini-fab (click)="deleteRole(element.roleId)" style=" background-color:#d62828;" aria-label="Eliminar"
+                        title="Eliminar">
+                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons
+            aria-label="Seleccione las páginas de los roles">
+        </mat-paginator>
+    </app-card>
+
+    <ng-template #roleTemplate>
+
+        <div class="dialog-content">
+            <div class="dialog-header-card">
+                <h2 class="dialog-title">Nuevo Rol</h2>
+            </div>
+            <form [formGroup]="roleForm">
+
+                <div class="flex" style="margin-top: 10px;">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Nombre</mat-label>
+                        <input style="width: 100%;" class="text-left" type="text" matInput
+                            formControlName="description">
+                        <mat-hint>Nombre del rol</mat-hint>
+                        <mat-error> La pantalla es requerida </mat-error>
+                    </mat-form-field>
+                </div>
+
+            </form>
+
+            <div class="flex" style="margin-top: 15px;">
+                <button class="flex-auto" [disabled]="roleForm.invalid" (click)="postRole()" mat-flat-button
+                    [color]="'accent'">
+                    <mat-icon [svgIcon]="'heroicons_outline:user-add'"></mat-icon>
+                    <span class="ml-2 mr-1">{{this.buttonText}}</span>
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</div>
