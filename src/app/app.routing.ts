@@ -1,8 +1,10 @@
-import { Route } from '@angular/router';
+import { Route, provideRouter } from '@angular/router';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
+import { AppComponent } from './app.component';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -87,3 +89,11 @@ export const appRoutes: Route[] = [
         ]
     }
 ];
+
+bootstrapApplication(AppComponent,
+    {
+      providers: [
+        provideRouter(appRoutes, withViewTransitions())
+      ]
+    }
+  );

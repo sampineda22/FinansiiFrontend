@@ -33,6 +33,7 @@ export class BankTransfersComponent implements AfterViewInit {
   selectedDate: Date;
   allProcesed: boolean = false;
   companyCode: string = '';
+  ableImport: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -76,6 +77,7 @@ export class BankTransfersComponent implements AfterViewInit {
     this.accountIdSelected = accountId;
 
     if (this.selectedDate !== undefined) {
+      this.allProcesed = false;
       this._bankTransfersService.getStatementsByAccountId$(accountId, this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd'), this._sharedService.getCompanyCode()).subscribe(data => {
         if (data.length <= 0) {
           Swal.fire("", "No se encontraron transacciones para el banco", "info");
@@ -87,6 +89,7 @@ export class BankTransfersComponent implements AfterViewInit {
 
           this.allProcesed = !this.bankStatements.some(x => x.status !== BankStatatementState.Processed);
         }
+        this.ableImport = !this.allProcesed || this.bankStatements.length <= 0;
       })
     }
   }
@@ -104,8 +107,7 @@ export class BankTransfersComponent implements AfterViewInit {
       this.dataSourceDetail.data = data;
 
       const dialogRef = this.dialog.open(detailTemplate, {
-        width: '900px',
-        height: '900px'
+        width: '900px'
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -131,26 +133,31 @@ export class BankTransfersComponent implements AfterViewInit {
     }
   }
 
-  async importFile(): Promise<void>{
+  async importFile(): Promise<void> {
     const response: boolean = await this._sharedService.verificationSwal("¿Está seguro que desea importar las transacciones?");
-    
+
     if (response) {
-      debugger
-         this._bankTransfersService.importStatementFromFileByAccount$(this.accountIdSelected, this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd'),this._sharedService.getCompanyCode()).subscribe(
-           (data) => {
-             debugger
-             Swal.fire("Importación Realizada", "Se genero la importación exitosamente", "success");
-             this.getBanksStatement(this.accountIdSelected)
-           },
-           (error) => {
-             this.dialog.closeAll();
-             Swal.fire('Error', error.error.mensaje, 'error');
-           })
+      this._bankTransfersService.importStatementFromFileByAccount$(this.accountIdSelected, this.datePipe.transform(/*this.addDays(*/this.selectedDate/*, 1)*/, 'yyyy-MM-dd'), this._sharedService.getCompanyCode()).subscribe(
+        (data) => {
+          Swal.fire("Importación Realizada", "Se genero la importación exitosamente", "success");
+          this.getBanksStatement(this.accountIdSelected)
+        },
+        (error) => {
+          this.dialog.closeAll();
+          Swal.fire('Error', error.error.mensaje, 'error');
+        })
     }
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSourceDetail.filter = filterValue.trim().toLowerCase();
+  }
+
+  addDays(date: Date, days: number): Date {
+    debugger
+    let result = new Date(date);
+    result.setDate(date.getDate() + days);
+    return result;
   }
 }

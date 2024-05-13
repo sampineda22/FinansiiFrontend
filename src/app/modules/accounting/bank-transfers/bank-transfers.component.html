@@ -28,7 +28,7 @@
                     </mat-form-field>
 
                     <button (click)="importFile()" mat-flat-button class="bg-accent mat-mdc-unelevated-button centered-button"
-                        [disabled]="this.bankStatements.length<=0 || this.allProcesed" style="color: white;">
+                        [disabled]="this.allProcesed || !this.ableImport" style="color: white;">
                         <mat-icon svgIcon="heroicons_solid:chevron-down"></mat-icon>
                         <span class="ml-2 mr-1">Importar</span>
                     </button>
@@ -77,7 +77,7 @@
                     </ng-container>
                     <ng-container *ngIf="element.status == 1">
                         <button mat-flat-button
-                            style="color: #03af2e; background-color: #84e088b2; border: 2px solid #03af2e">Procesado</button>
+                            style="color: #03af2e; background-color: #84e088b2; border: 2px solid #03af2e">Enviado a AX</button>
                     </ng-container>
                     <ng-container *ngIf="element.status == 2">
                         <button mat-flat-button
