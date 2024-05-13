@@ -43,7 +43,6 @@ export class BankTransfersComponent implements AfterViewInit {
     , private datePipe: DatePipe
     , private _translocoService: TranslocoService
     , private cdr: ChangeDetectorRef) {
-
     const today = new Date();
     today.setDate(today.getDate() + 1);
     this.maxDate = today.toISOString().split('T')[0];
