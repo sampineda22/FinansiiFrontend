@@ -89,11 +89,3 @@ export const appRoutes: Route[] = [
         ]
     }
 ];
-
-bootstrapApplication(AppComponent,
-    {
-      providers: [
-        provideRouter(appRoutes, withViewTransitions())
-      ]
-    }
-  );
