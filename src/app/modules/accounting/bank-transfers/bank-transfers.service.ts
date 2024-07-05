@@ -31,14 +31,14 @@ export class BankTransfersService {
     return this.http.get<BankStatementDetails[]>(`${this.api}Details-BankStatementId?bankStatementId=${bankStatementId}`)
   }
 
-  sendBankStatementServiceAX$(BankStatementId: number): Observable<any>{
+  sendBankStatementServiceAX$(BankStatementId: string): Observable<any>{
     const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
     return this.http.get<any>(`${this.api}SendBankStatementServiceAX/${BankStatementId}`, { headers })
   }
 
   importStatementFromFileByAccount$(accountId: string, date: string, companyCode: string): Observable<any>{
     const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.get<any>(`${this.api}ImportStatementFromFileByAccountId/${accountId}/${date}/${companyCode}`, { headers })
+    return this.http.get<any>(`${this.api}ImportStatementFromFileByAccountId/${accountId}/${companyCode}/${date}`, { headers })
   }
 
 }

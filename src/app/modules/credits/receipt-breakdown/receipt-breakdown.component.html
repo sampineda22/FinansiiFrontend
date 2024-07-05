@@ -1,0 +1,131 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-xl md:text-4xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Desglose de Detalles de Recibos
+                    </div>
+                </div>
+
+                <mat-form-field style="width: 15%">
+                    <mat-label>Asesor</mat-label>
+                    <mat-select [(value)]="selectedAgent" (selectionChange)="getReceiptDetailBreakdown($event.value)">
+                        <mat-option *ngFor="let salesAgent of salesAgents" [value]="salesAgent.personalCode">
+                            {{salesAgent.personalCode}} - {{salesAgent.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                &nbsp;
+
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <mat-form-field>
+                        <mat-label>Año</mat-label>
+                        <mat-select [(value)]="selectedFiscalYear" (selectionChange)="getFiscalWeeks($event.value)">
+                            <mat-option *ngFor="let fiscalYear of fiscalYears" [value]="fiscalYear.recId">
+                                {{fiscalYear.year}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field style="width: 70%">
+                        <mat-label>Semana</mat-label>
+                        <mat-select (selectionChange)="getSelectedWeek($event.value)">
+                            <mat-option *ngFor="let fiscalWeek of fiscalWeeks" [value]="fiscalWeek">
+                                S{{fiscalWeek.week}} - {{fiscalWeek.startDate | date: 'dd/MMM/yyyy'}} al
+                                {{fiscalWeek.endDate | date: 'dd/MMM/yyyy'}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <button [disabled]="!(selectedAgent && selectedFiscalYear && selectedWeek)"
+                    (click)="getSelectedWeek(selectedWeek)">
+                    <mat-icon aria-hidden="false" aria-label="Refrescar" fontIcon="refresh"></mat-icon>
+                </button>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+
+                <button mat-flat-button (click)="createReport()"
+                    class="bg-accent mat-mdc-unelevated-button centered-button"
+                    [disabled]="this.receiptDetailBreakdown.length <= 0" style="color: white;">
+                    <mat-icon svgIcon="heroicons_solid:document"></mat-icon>
+                    <span class="ml-2 mr-1">Crear Reporte</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <app-card>
+
+        <mat-form-field style="width: 100%;padding-top: 1%">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Filtro">
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="receiptNumber">
+                <th mat-header-cell *matHeaderCellDef> Num. de Recibo </th>
+                <td mat-cell *matCellDef="let element"> {{element.receiptNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="documentNumber">
+                <th mat-header-cell *matHeaderCellDef> Num. de Documento </th>
+                <td mat-cell *matCellDef="let element"> {{element.documentNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="productType">
+                <th mat-header-cell *matHeaderCellDef> Tipo de Producto </th>
+                <td mat-cell *matCellDef="let element"> {{element.productType}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="client">
+                <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                <td mat-cell *matCellDef="let element"> {{element.clientAccount}} - {{element.clientName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="receiptAmountInCurrency">
+                <th mat-header-cell *matHeaderCellDef> Valor en Divisa </th>
+                <td mat-cell *matCellDef="let element"> {{element.receiptAmountInCurrency | currency:
+                    element.currencyCode}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="receiptAmount">
+                <th mat-header-cell *matHeaderCellDef> Valor de Recibo </th>
+                <td mat-cell *matCellDef="let element"> {{element.receiptAmount | commaSeparation}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="canceledReceiptAmount">
+                <th mat-header-cell *matHeaderCellDef> Valor de Recibo Cancelado </th>
+                <td mat-cell *matCellDef="let element"> {{element.canceledReceiptAmount | commaSeparation}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef> Total </th>
+                <td mat-cell *matCellDef="let element"> {{element.total | commaSeparation}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons
+            aria-label="Seleccione las páginas de los roles">
+        </mat-paginator>
+    </app-card>
+</div>
+
+<app-loading [body]="body"></app-loading>

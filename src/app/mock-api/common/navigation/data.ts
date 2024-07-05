@@ -15,6 +15,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_solid:currency-dollar',
         link : '/app-bank-transfers'
+    },
+    {
+        id   : 'app-receipt-breakdown',
+        title: 'Desglose Detalle de Recibos',
+        type : 'basic',
+        icon : 'heroicons_solid:newspaper',
+        link : '/app-receipt-breakdown'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

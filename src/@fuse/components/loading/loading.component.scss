@@ -1,0 +1,96 @@
+.loading-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.692);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  .loading-content {
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .coin-animation {
+      width: 80%;
+      height: 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coin-animation svg {
+      position: absolute;
+      top: 0;
+      left: -50px;
+      width: 50px;
+      height: 50px;
+      animation: rollCoin 2s linear infinite;
+    }
+
+    @keyframes rollCoin {
+      0% {
+        left: -50px;
+        transform: rotate(0deg);
+      }
+
+      50% {
+        left: calc(100% - 50px);
+        transform: rotate(360deg);
+      }
+
+      51% {
+        transform: rotate(360deg) translateY(0);
+      }
+
+      100% {
+        transform: rotate(360deg) translateY(100px);
+      }
+    }
+
+    .progress-bar-container {
+      width: 80%;
+      height: 10px;
+      background-color: #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background-color: #4c9abe;
+      animation: loadProgress 2s linear infinite;
+    }
+
+    @keyframes loadProgress {
+      0% {
+        width: 0%;
+      }
+
+      100% {
+        width: 100%;
+      }
+    }
+
+    .loading-message {
+      font-size: 20px;
+      color: #dbdada;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+
+  }
+}

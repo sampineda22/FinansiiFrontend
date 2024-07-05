@@ -1,4 +1,5 @@
-export interface entityResponse{
+export interface EntityResponse<T>{
     ok: boolean,
-    mensaje: string
+    mensaje: string,
+    data?: T;
 }

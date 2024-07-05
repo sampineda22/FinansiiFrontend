@@ -30,7 +30,9 @@ export class CompaniesComponent implements OnInit {
     // Set the country iso codes for languages for flags
     this.flagCodes = {
       'IMHN': 'IMHN',
-      'IMGT': 'IMGT'
+      'IMGT': 'IMGT',
+      'IMCR': 'IMCR',
+      'IMSL': 'IMSL'
     };
   }
 

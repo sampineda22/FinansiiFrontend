@@ -19,6 +19,14 @@ import { TranslocoHttpLoader } from 'app/core/transloco/transloco.http-loader';
                     {
                         id   : 'IMGT',
                         label: 'IMGT'
+                    },
+                    {
+                        id   : 'IMCR',
+                        label: 'IMCR'
+                    },
+                    {
+                        id   : 'IMSL',
+                        label: 'IMSL'
                     }
                 ],
                 defaultLang         : 'en',

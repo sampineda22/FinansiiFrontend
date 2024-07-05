@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600">
+  <rect width="1000" height="600" fill="#0067C3"/>
+  <rect width="1000" height="400" y="200" fill="#fff"/>
+  <rect width="1000" height="200" y="400" fill="#0067C3"/>
+  <circle cx="500" cy="300" r="120" fill="#fff"/>
+  <circle cx="500" cy="300" r="115" fill="none" stroke="#000" stroke-width="10"/>
+  <text x="500" y="330" font-family="Arial" font-size="200" fill="#000" text-anchor="middle" dominant-baseline="middle">SVG</text>
+</svg>

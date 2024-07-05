@@ -16,7 +16,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { SharedModule } from 'app/shared/shared.module';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatChipsModule} from '@angular/material/chips';
-import { CurrencyPipe } from '@fuse/pipes/currency.pipe';
 import { DecimalPipe } from '@angular/common';
 import { TransactionTypePipe } from '@fuse/pipes/transaction-type.pipe';
 
@@ -29,7 +28,7 @@ const bankTransfersRoutes: Route[] = [
 
 @NgModule({
   providers: [DatePipe, DecimalPipe],
-  declarations: [BankTransfersComponent, CurrencyPipe, TransactionTypePipe],
+  declarations: [BankTransfersComponent, TransactionTypePipe],
   imports: [
     SharedModule,
     RouterModule.forChild(bankTransfersRoutes),

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator';
 import { BankStatement } from 'app/interfaces/accounting/bankStatement';
 import { BankTransfersService } from './bank-transfers.service';
@@ -11,6 +11,7 @@ import { SharedService } from 'app/shared/shared.service';
 import { BankStatementDetails } from 'app/interfaces/accounting/bankStatementDetails';
 import { TranslocoService } from '@ngneat/transloco';
 import { BankStatatementState } from 'app/enum/bankStatatementState';
+import { LoadingService } from '@fuse/components/loading/loading.service';
 
 @Component({
   selector: 'app-bank-transfers',
@@ -29,6 +30,7 @@ export class BankTransfersComponent implements AfterViewInit {
   itemsPerPage: number = 10;
   pageSize: number[] = [];
   maxDate?: string;
+  body: string = '';
   accountIdSelected?: string = '';
   selectedDate: Date;
   allProcesed: boolean = false;
@@ -39,6 +41,7 @@ export class BankTransfersComponent implements AfterViewInit {
 
   constructor(private _bankTransfersService: BankTransfersService
     , private _sharedService: SharedService
+    , private loadingService: LoadingService
     , public dialog: MatDialog
     , private datePipe: DatePipe
     , private _translocoService: TranslocoService
@@ -71,14 +74,18 @@ export class BankTransfersComponent implements AfterViewInit {
   }
 
   getBanksStatement(accountId: string): void {
+    debugger
     this.bankStatements = [];
     this.dataSource.data = [];
     this.accountIdSelected = accountId;
 
     if (this.selectedDate !== undefined) {
+      this.body = 'Consultando transacciones...';
+      this.loadingService.show();
       this.allProcesed = false;
       this._bankTransfersService.getStatementsByAccountId$(accountId, this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd'), this._sharedService.getCompanyCode()).subscribe(data => {
         if (data.length <= 0) {
+          this.loadingService.hide();
           Swal.fire("", "No se encontraron transacciones para el banco", "info");
         } else {
           this.bankStatements = data
@@ -87,6 +94,7 @@ export class BankTransfersComponent implements AfterViewInit {
           this.itemsPerPage = this.pageSize[0];
 
           this.allProcesed = !this.bankStatements.some(x => x.status !== BankStatatementState.Processed);
+          this.loadingService.hide();
         }
         this.ableImport = !this.allProcesed || this.bankStatements.length <= 0;
       })
@@ -118,14 +126,17 @@ export class BankTransfersComponent implements AfterViewInit {
   async exportToAx(): Promise<void> {
     const response: boolean = await this._sharedService.verificationSwal("¿Está seguro que desea exportar a AX?");
     if (response) {
+      this.body = 'Exportando a AX...';
+      this.loadingService.show();
       for (const statement of this.bankStatements) {
-        this._bankTransfersService.sendBankStatementServiceAX$(statement.bankStatementId).subscribe(
+        this._bankTransfersService.sendBankStatementServiceAX$(statement.bankStatementId.toString()).subscribe(
           (data) => {
+            this.loadingService.hide();
             Swal.fire("Diarios Creados", "Se crearón los siguientes diarios exitosamente: " + data.data, "success");
             this.getBanksStatement(this.accountIdSelected)
           },
           (error) => {
-            this.dialog.closeAll();
+            this.loadingService.hide();
             Swal.fire('Error', error.error.mensaje, 'error');
           })
       }
@@ -136,13 +147,16 @@ export class BankTransfersComponent implements AfterViewInit {
     const response: boolean = await this._sharedService.verificationSwal("¿Está seguro que desea importar las transacciones?");
 
     if (response) {
+      this.body = 'Importando transacciones...';
+      this.loadingService.show();
       this._bankTransfersService.importStatementFromFileByAccount$(this.accountIdSelected, this.datePipe.transform(/*this.addDays(*/this.selectedDate/*, 1)*/, 'yyyy-MM-dd'), this._sharedService.getCompanyCode()).subscribe(
         (data) => {
+          this.loadingService.hide();
           Swal.fire("Importación Realizada", "Se genero la importación exitosamente", "success");
           this.getBanksStatement(this.accountIdSelected)
         },
         (error) => {
-          this.dialog.closeAll();
+          this.loadingService.hide();
           Swal.fire('Error', error.error.mensaje, 'error');
         })
     }
@@ -154,7 +168,6 @@ export class BankTransfersComponent implements AfterViewInit {
   }
 
   addDays(date: Date, days: number): Date {
-    debugger
     let result = new Date(date);
     result.setDate(date.getDate() + days);
     return result;

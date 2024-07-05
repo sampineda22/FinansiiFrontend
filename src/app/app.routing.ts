@@ -1,10 +1,8 @@
-import { Route, provideRouter } from '@angular/router';
+import { Route } from '@angular/router'
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
-import { AppComponent } from './app.component';
-import { bootstrapApplication } from '@angular/platform-browser';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -86,6 +84,19 @@ export const appRoutes: Route[] = [
         },
         children: [
             {path: 'app-bank-transfers', loadChildren: () => import('app/modules/accounting/accounting.module').then(m => m.AccountingModule)}
+        ]
+    },
+
+    // Credits routes
+    {
+        path: '',
+        canMatch: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: InitialDataResolver,
+        },
+        children: [
+            {path: 'app-receipt-breakdown', loadChildren: () => import('app/modules/credits/credits.module').then(m => m.CreditsModule)}
         ]
     }
 ];

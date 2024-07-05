@@ -1,0 +1,13 @@
+<div class="loading-modal" *ngIf="isLoading">
+  <div class="loading-content">
+    <div class="coin-animation">
+      <svg width="50" height="50" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="gold" />
+      </svg>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="loading-message">{{body}}</div>
+  </div>
+</div>
