@@ -34,6 +34,7 @@
     "mat-select-filter": "^2.4.1",
     "ng-apexcharts": "1.7.4",
     "ngx-quill": "^25.0.0-quill2.0",
+    "node-modules": "^1.0.1",
     "perfect-scrollbar": "1.5.5",
     "quill": "1.3.7",
     "rxjs": "7.8.0",
