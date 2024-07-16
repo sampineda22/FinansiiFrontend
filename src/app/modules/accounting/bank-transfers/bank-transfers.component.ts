@@ -74,7 +74,6 @@ export class BankTransfersComponent implements AfterViewInit {
   }
 
   getBanksStatement(accountId: string): void {
-    debugger
     this.bankStatements = [];
     this.dataSource.data = [];
     this.accountIdSelected = accountId;

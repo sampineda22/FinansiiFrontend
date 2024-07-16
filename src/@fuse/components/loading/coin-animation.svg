@@ -1,0 +1,44 @@
+<svg
+  width="200"
+  height="200"
+  viewBox="0 0 200 200"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <style>
+    .coin {
+      animation: roll 2s infinite linear, fall 1s 2s forwards;
+    }
+
+    @keyframes roll {
+      0% {
+        transform: rotate(0) translateX(0);
+      }
+      50% {
+        transform: rotate(180deg) translateX(80px);
+      }
+      100% {
+        transform: rotate(360deg) translateX(0);
+      }
+    }
+
+    @keyframes fall {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100px);
+      }
+    }
+  </style>
+  <circle
+    class="coin"
+    cx="100"
+    cy="50"
+    r="20"
+    fill="gold"
+    stroke="black"
+    stroke-width="2"
+  />
+</svg>
