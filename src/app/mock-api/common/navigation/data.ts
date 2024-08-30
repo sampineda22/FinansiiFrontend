@@ -14,7 +14,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Transferencias Bancarias',
         type : 'basic',
         icon : 'heroicons_solid:currency-dollar',
-        link : '/app-bank-transfers'
+        link : '/accounting/app-bank-transfers'
     },
     {
         id   : 'app-receipt-breakdown',
@@ -22,6 +22,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_solid:newspaper',
         link : '/app-receipt-breakdown'
+    }
+    ,
+    {
+        id   : 'app-providers-report',
+        title: 'Reporte de Antigüedad de Proveedores',
+        type : 'basic',
+        icon : 'heroicons_solid:user-group',
+        link : '/accounting/app-providers-report'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

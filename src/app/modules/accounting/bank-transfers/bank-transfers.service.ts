@@ -36,9 +36,9 @@ export class BankTransfersService {
     return this.http.get<any>(`${this.api}SendBankStatementServiceAX/${BankStatementId}`, { headers })
   }
 
-  importStatementFromFileByAccount$(accountId: string, date: string, companyCode: string): Observable<any>{
+  importStatementFromFileByAccount$(date: string, companyCode: string, accountId: string): Observable<any>{
     const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.get<any>(`${this.api}ImportStatementFromFileByAccountId/${accountId}/${companyCode}/${date}`, { headers })
+    return this.http.get<any>(`${this.api}ImportStatementFromFileByAccountId/${companyCode}/${date}/${accountId}`, { headers })
   }
 
 }

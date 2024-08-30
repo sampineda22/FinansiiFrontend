@@ -1,0 +1,6 @@
+// Define custom styles for the mat-menu
+.custom-mat-menu {
+    max-height: 20%; // Set the maximum height of the mat-menu
+    overflow-y: auto;  // Enable vertical scrolling if content exceeds height
+  }
+  

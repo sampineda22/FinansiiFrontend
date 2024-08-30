@@ -1,0 +1,245 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-2xl md:text-6xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Reporte de Antigüedad de Proveedores
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
+                    <button mat-flat-button class="bg-accent mat-mdc-unelevated-button centered-button"
+                        (click)="fileInput.click()" style="color: white;">
+                        <mat-icon>upload</mat-icon>
+                        <span class="ml-2 mr-1">Adjuntar Archivo</span>
+                    </button>
+
+                    <button mat-flat-button class="mat-mdc-unelevated-button centered-button"
+                        (click)="downloadProvidersReport()" style="background-color: #106b04; color: white;"
+                        [disabled]="this.providersReport.length <= 0">
+                        <mat-icon>download</mat-icon>
+                        <span class="ml-2 mr-1">Descargar Reporte</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <app-card>
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="provider">
+                <th mat-header-cell *matHeaderCellDef> Código de Proveedor
+                    <button mat-icon-button [matMenuTriggerFor]="providerMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #providerMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('provider', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('provider', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterProviderValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('provider');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredProviderValues"
+                                [checked]="selectedFilters.provider.has(value)"
+                                (change)="onFilterChange('provider', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.provider}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Nombre de Proveedor
+                    <button mat-icon-button [matMenuTriggerFor]="nameMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #nameMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('name', 'asc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('name', 'desc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterNameValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('name')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredNameValues"
+                                [checked]="selectedFilters.name.has(value)"
+                                (change)="onFilterChange('name', value, $event.checked)">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="group">
+                <th mat-header-cell *matHeaderCellDef> Grupo
+                    <button mat-icon-button [matMenuTriggerFor]="groupMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #groupMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('group', 'asc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('group', 'desc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterGroupValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item color="warn" (click)="clearColumnFilter('group')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredGroupValues"
+                                [checked]="selectedFilters.group.has(value)"
+                                (change)="onFilterChange('group', value, $event.checked)">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.group}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="realBalance">
+                <th mat-header-cell *matHeaderCellDef> Saldo Real
+                    <button mat-icon-button [matMenuTriggerFor]="realBalanceMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #realBalanceMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('advance', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('advance', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterRealBalanceValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('realBalance')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredRealBalanceValues"
+                                [checked]="selectedFilters.realBalance.has(value)"
+                                (change)="onFilterChange('realBalance', value, $event.checked)">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.realBalance | commaSeparation}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="advance">
+                <th mat-header-cell *matHeaderCellDef> Anticipo
+                    <button mat-icon-button [matMenuTriggerFor]="advanceMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #advanceMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('advance', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('advance', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterAdvanceValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('advance')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <mat-checkbox *ngFor="let value of filteredAdvanceValues"
+                            [checked]="selectedFilters.advance.has(value)"
+                            (change)="onFilterChange('advance', value, $event.checked)">
+                            {{ value }}
+                        </mat-checkbox>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.advance | commaSeparation}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="eraseFilters">
+                <th mat-header-cell *matHeaderCellDef>
+                    <button (click)="resetFilters()" [disabled]="this.providersReport.length <= 0"
+                        style="background-color: #920101; color: white;" mat-mini-fab
+                        aria-label="Borrar todos los filtros">
+                        <mat-icon>filter_list_off</mat-icon>
+                    </button>
+                </th>
+                <td mat-cell *matCellDef="let element"></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+        </mat-paginator>
+    </app-card>
+
+</div>
+
+<app-loading [body]="body"></app-loading>

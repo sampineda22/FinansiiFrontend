@@ -15,7 +15,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { CommaSeparationPipe } from '@fuse/pipes/comma-separation.pipe';
 
 const receiptBreakdownRoutes: Route[] = [
   {
@@ -26,7 +25,7 @@ const receiptBreakdownRoutes: Route[] = [
 
 @NgModule({
   providers: [DatePipe, DecimalPipe],
-  declarations: [ReceiptBreakdownComponent, CommaSeparationPipe],
+  declarations: [ReceiptBreakdownComponent],
   imports: [
     SharedModule,
     RouterModule.forChild(receiptBreakdownRoutes),

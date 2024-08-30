@@ -148,7 +148,7 @@ export class BankTransfersComponent implements AfterViewInit {
     if (response) {
       this.body = 'Importando transacciones...';
       this.loadingService.show();
-      this._bankTransfersService.importStatementFromFileByAccount$(this.accountIdSelected, this.datePipe.transform(/*this.addDays(*/this.selectedDate/*, 1)*/, 'yyyy-MM-dd'), this._sharedService.getCompanyCode()).subscribe(
+      this._bankTransfersService.importStatementFromFileByAccount$(this.datePipe.transform(/*this.addDays(*/this.selectedDate/*, 1)*/, 'yyyy-MM-dd'), this._sharedService.getCompanyCode(), this.accountIdSelected).subscribe(
         (data) => {
           this.loadingService.hide();
           Swal.fire("Importación Realizada", "Se genero la importación exitosamente", "success");

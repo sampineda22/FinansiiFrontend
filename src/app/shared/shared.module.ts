@@ -6,13 +6,16 @@ import { LoadingComponent } from '@fuse/components/loading/loading.component';
 import { MatDialogComponent } from '@fuse/components/mat-dialog/mat-dialog.component';
 import { CurrencyPipe } from '@fuse/pipes/currency.pipe';
 import { LoadingService } from '@fuse/components/loading/loading.service';
+import { CommaSeparationPipe } from '@fuse/pipes/comma-separation.pipe';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
-    declarations: [CardComponent, LoadingComponent, MatDialogComponent, CurrencyPipe],
+    declarations: [CardComponent, LoadingComponent, MatDialogComponent, CurrencyPipe, CommaSeparationPipe],
     imports: [
         CommonModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatDividerModule
     ],
     exports: [
         CommonModule,
@@ -22,7 +25,9 @@ import { LoadingService } from '@fuse/components/loading/loading.service';
         CardComponent,
         MatDialogComponent,
         CurrencyPipe,
-        LoadingComponent
+        LoadingComponent,
+        CommaSeparationPipe,
+        MatDividerModule
     ],
     providers: [LoadingService]
 })

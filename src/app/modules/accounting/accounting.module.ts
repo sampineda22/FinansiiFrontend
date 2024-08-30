@@ -18,20 +18,31 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatChipsModule} from '@angular/material/chips';
 import { DecimalPipe } from '@angular/common';
 import { TransactionTypePipe } from '@fuse/pipes/transaction-type.pipe';
+import { ProvidersReportComponent } from './providers-report/providers-report.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const bankTransfersRoutes: Route[] = [
   {
-      path     : '',
+      path     : 'app-bank-transfers',
       component: BankTransfersComponent
+  }
+];
+
+const providersReportRoutes: Route[] = [
+  {
+      path     : 'app-providers-report',
+      component: ProvidersReportComponent
   }
 ];
 
 @NgModule({
   providers: [DatePipe, DecimalPipe],
-  declarations: [BankTransfersComponent, TransactionTypePipe],
+  declarations: [BankTransfersComponent, ProvidersReportComponent, TransactionTypePipe],
   imports: [
-    SharedModule,
-    RouterModule.forChild(bankTransfersRoutes),
+    SharedModule, //Comparte los modulos más comunes
+    RouterModule.forChild([
+      ...providersReportRoutes,
+      ...bankTransfersRoutes]),
     MatIconModule,
     MatMenuModule,
     MatTableModule,
@@ -44,7 +55,9 @@ const bankTransfersRoutes: Route[] = [
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatChipsModule
-  ]
+    MatChipsModule,
+    MatCheckboxModule
+  ],
+  exports: [RouterModule]
 })
 export class AccountingModule { }
