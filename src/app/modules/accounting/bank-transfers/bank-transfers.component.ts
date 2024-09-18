@@ -44,8 +44,7 @@ export class BankTransfersComponent implements AfterViewInit {
     , private loadingService: LoadingService
     , public dialog: MatDialog
     , private datePipe: DatePipe
-    , private _translocoService: TranslocoService
-    , private cdr: ChangeDetectorRef) {
+    , private _translocoService: TranslocoService) {
     const today = new Date();
     today.setDate(today.getDate() + 1);
     this.maxDate = today.toISOString().split('T')[0];
@@ -91,6 +90,8 @@ export class BankTransfersComponent implements AfterViewInit {
           this.dataSource.data = data;
           this.pageSize = this._sharedService.setPageSize(data.length);
           this.itemsPerPage = this.pageSize[0];
+          this.paginator.pageSize = this.itemsPerPage;
+          this.paginator._changePageSize(this.itemsPerPage);
 
           this.allProcesed = !this.bankStatements.some(x => x.status !== BankStatatementState.Processed);
           this.loadingService.hide();
@@ -148,7 +149,7 @@ export class BankTransfersComponent implements AfterViewInit {
     if (response) {
       this.body = 'Importando transacciones...';
       this.loadingService.show();
-      this._bankTransfersService.importStatementFromFileByAccount$(this.datePipe.transform(/*this.addDays(*/this.selectedDate/*, 1)*/, 'yyyy-MM-dd'), this._sharedService.getCompanyCode(), this.accountIdSelected).subscribe(
+      this._bankTransfersService.importStatementFromFileByAccount$(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd'), this._sharedService.getCompanyCode(), this.accountIdSelected).subscribe(
         (data) => {
           this.loadingService.hide();
           Swal.fire("Importación Realizada", "Se genero la importación exitosamente", "success");
@@ -164,11 +165,5 @@ export class BankTransfersComponent implements AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSourceDetail.filter = filterValue.trim().toLowerCase();
-  }
-
-  addDays(date: Date, days: number): Date {
-    let result = new Date(date);
-    result.setDate(date.getDate() + days);
-    return result;
   }
 }

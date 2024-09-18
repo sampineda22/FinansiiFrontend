@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,7 +9,6 @@ import { ProviderReport } from 'app/interfaces/accounting/providerReport';
 import { SharedService } from 'app/shared/shared.service';
 import { ProvidersReportService } from './providers-report.service';
 import Swal from 'sweetalert2';
-import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-providers-report',
