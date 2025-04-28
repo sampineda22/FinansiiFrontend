@@ -13,6 +13,7 @@ export class SharedService {
 
   ngOnInit(): void {
     this.getCompanyCode();
+    this.getUser();
   }
 
   setCompanyCode(code: string) {
@@ -24,6 +25,11 @@ export class SharedService {
   getCompanyCode() {
     const access_Logged: any = JSON.parse(localStorage.getItem('access_Logged'));
     return access_Logged.companyCode;
+  }
+
+  getUser() {
+    const access_Logged: any = JSON.parse(localStorage.getItem('access_Logged'));
+    return access_Logged.userId;
   }
 
   setActualComponent(name: string) {

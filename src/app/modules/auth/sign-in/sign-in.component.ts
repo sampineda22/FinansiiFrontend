@@ -4,8 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { LoginRequest } from 'app/interfaces/admin/loginRequest';
-import { SharedService } from 'app/shared/shared.service';
 
 @Component({
     selector     : 'auth-sign-in',

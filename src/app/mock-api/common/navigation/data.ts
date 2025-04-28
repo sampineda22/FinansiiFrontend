@@ -30,6 +30,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_solid:user-group',
         link : '/accounting/app-providers-report'
+    },
+    {
+        id   : 'app-certificate-deposit',
+        title: 'Certificados de Depósito',
+        type : 'basic',
+        icon : 'heroicons_solid:ticket',
+        link : '/accounting/app-certificate-deposit'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

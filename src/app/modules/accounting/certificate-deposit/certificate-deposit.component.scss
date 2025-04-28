@@ -1,0 +1,12 @@
+@import '../../../../app/shared/shared.scss';
+
+.custom-mat-menu {
+    max-height: 20%; 
+    overflow-y: auto;
+  }
+
+  .table-container {
+    max-height: 700px;
+    overflow-y: auto;
+}
+  

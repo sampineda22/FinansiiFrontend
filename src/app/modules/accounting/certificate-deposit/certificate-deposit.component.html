@@ -1,0 +1,534 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-2xl md:text-6xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Certificados de Depósito
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <button mat-flat-button class="mat-mdc-unelevated-button centered-button"
+                        style="background-color: #135880; color: white;" (click)="openDialog(newCertificate)">
+                        <mat-icon>add_circle</mat-icon>
+                        <span class="ml-2 mr-1">Nuevo Certificado</span>
+                    </button>
+
+                    <button (click)="downloadExcel()" mat-flat-button class="mat-mdc-unelevated-button centered-button"
+                        style="background-color: #106b04; color: white;">
+                        <mat-icon>table_view</mat-icon>
+                        <span class="ml-2 mr-1">Generar Excel</span>
+                    </button>
+
+                    <button mat-flat-button class="bg-accent mat-mdc-unelevated-button centered-button"
+                        (click)="openCreateJournal(CreateJournal)" style="color: white;">
+                        <mat-icon>book</mat-icon>
+                        <span class="ml-2 mr-1">Generar Diario Semanal</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <app-card>
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="bank">
+                <th mat-header-cell *matHeaderCellDef> Banco
+                    <button mat-icon-button [matMenuTriggerFor]="bankMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #bankMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('bank', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('bank', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterBankValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('bank');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredBankValues"
+                                [checked]="selectedFilters.bank.has(value)"
+                                (change)="onFilterChange('bank', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.bank}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cdNumber">
+                <th mat-header-cell *matHeaderCellDef> Num. de CD
+                    <button mat-icon-button [matMenuTriggerFor]="cdMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #cdMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('cdNumber', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('cdNumber', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterCDValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('bank');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredCDValues"
+                                [checked]="selectedFilters.cdNumber.has(value)"
+                                (change)="onFilterChange('cdNumber', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.cdNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="currency">
+                <th mat-header-cell *matHeaderCellDef> Moneda
+                    <button mat-icon-button [matMenuTriggerFor]="currencyMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #currencyMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('currency', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('currency', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterCurrencyValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('currency');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredCurrencyValues"
+                                [checked]="selectedFilters.cdNumber.has(value)"
+                                (change)="onFilterChange('currency', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="startDate">
+                <th mat-header-cell *matHeaderCellDef> Fecha de Inicio </th>
+                <td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="endDate">
+                <th mat-header-cell *matHeaderCellDef> Fecha de Vencimiento </th>
+                <td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Monto
+                    <button mat-icon-button [matMenuTriggerFor]="amountMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #amountMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('amount', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('amount', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterAmountValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('amount')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredAmountValues"
+                                [checked]="selectedFilters.amount.has(value)"
+                                (change)="onFilterChange('amount', value, $event.checked)">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.amount | currency: element.currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ratePercentage">
+                <th mat-header-cell *matHeaderCellDef> Tasa de Interés
+                    <button mat-icon-button [matMenuTriggerFor]="rateMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #rateMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('ratePercentage', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('ratePercentage', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterRateValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('ratePercentage')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredRateValues"
+                                [checked]="selectedFilters.ratePercentage.has(value)"
+                                (change)="onFilterChange('ratePercentage', value, $event.checked)">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.ratePercentage}}%</td>
+            </ng-container>
+
+            <ng-container matColumnDef="dailyIncome">
+                <th mat-header-cell *matHeaderCellDef> Interés Diario
+                    <button mat-icon-button [matMenuTriggerFor]="dailyMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #dailyMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('dailyIncome', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('dailyIncome', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterDailyValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('dailyIncome')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredDailyValues"
+                                [checked]="selectedFilters.ratePercentage.has(value)"
+                                (change)="onFilterChange('dailyIncome', value, $event.checked)">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.dailyIncome | currency: element.currency}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-mini-fab (click)="openDialogWeekly(weeklyRecords, element)" aria-label="Ver"
+                        title="Ver">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    &nbsp;
+                    <button mat-mini-fab (click)="openDialog(newCertificate, element)" aria-label="Editar"
+                        title="Editar">
+                        <mat-icon>edit_square</mat-icon>
+                    </button>
+                    &nbsp;
+                    <button mat-mini-fab (click)="postFinalJournal(element)" aria-label="Diario Final"
+                        title="Diario Final">
+                        <mat-icon>flaky</mat-icon>
+                    </button>
+                    &nbsp;
+                    <button (click)="deleteCertificate(element)" [color]="'warn'" mat-mini-fab aria-label="Eliminar"
+                        title="Eliminar">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="eraseFilters">
+                <th mat-header-cell *matHeaderCellDef>
+                    <button (click)="resetFilters()" [disabled]="this.allCertificatesDeposit.length <= 0"
+                        style="background-color: #920101; color: white;" mat-mini-fab
+                        aria-label="Borrar todos los filtros">
+                        <mat-icon>filter_list_off</mat-icon>
+                    </button>
+                </th>
+                <td mat-cell *matCellDef="let element"></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+        </mat-paginator>
+    </app-card>
+
+    <ng-template #newCertificate>
+        <div class="dialog-content">
+            <div class="dialog-header-card">
+                <h2 class="dialog-title">Nuevo Certificado de Depósito</h2>
+            </div>
+
+            <form [formGroup]="newCertificateForm">
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Banco</mat-label>
+                        <mat-select formControlName="bank" (selectionChange)="filterRenovationCDs($event.value)">
+                            <mat-option *ngFor="let bank of allBanks" [value]="bank.accountId">
+                                {{bank.name}} - {{bank.accountNum}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        <mat-error> El banco es requerido </mat-error>
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Moneda</mat-label>
+                        <mat-select formControlName="currencyCode"
+                            (selectionChange)="filterRenovationCDs($event.value)">
+                            <mat-option *ngFor="let currency of allcurrencies" [value]="currency">
+                                {{currency}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        <mat-error> La moneda es requerida </mat-error>
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Número de CD</mat-label>
+                        <input style="width: 100%;" class="text-left" type="text" formControlName="cdNumber" matInput>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        <mat-error> El número del certificado es requerido</mat-error>
+                    </mat-form-field>
+                </div>
+
+                &nbsp;
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Fecha de Apertura</mat-label>
+                        <input formControlName="startDate" matInput [matDatepicker]="dp">
+                        <mat-hint>MMMM DD, YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+                        <mat-datepicker #dp></mat-datepicker>
+                        <mat-error> La fecha de apertura es requerida </mat-error>
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Fecha de Vencimiento</mat-label>
+                        <input formControlName="endDate" matInput [matDatepicker]="dp2">
+                        <mat-hint>MMMM DD, YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="dp2"></mat-datepicker-toggle>
+                        <mat-datepicker #dp2></mat-datepicker>
+                        <mat-error *ngIf="newCertificateForm.get('endDate')?.hasError('required')"> La fecha de
+                            vencimiento es requerida </mat-error>
+                        <mat-error *ngIf="newCertificateForm.hasError('dateRangeInvalid')">La fecha de vencimiento no
+                            puede ser anterior a la fecha de apertura</mat-error>
+                    </mat-form-field>
+                </div>
+
+                &nbsp;
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Valor</mat-label>
+                        <input style="width: 100%;" class="text-left" type="number" min="1" formControlName="amount"
+                            matInput>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        <mat-error> El valor es requerido </mat-error>
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Tasa de Interés</mat-label>
+                        <input style="width: 100%;" id="abrev" class="text-left" type="number" min="0.1"
+                            formControlName="rate" matInput>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        <mat-error> La tasa de interés es requerida </mat-error>
+                    </mat-form-field>
+                    <mat-checkbox formControlName="isCapitalizable" >¿Es
+                        capitalizable?</mat-checkbox>
+                </div>
+
+                <div class="flex">
+                    <mat-checkbox formControlName="isRenovation" (change)="showOptions($event)">¿Es
+                        renovación?</mat-checkbox>
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Certificados</mat-label>
+                        <mat-select formControlName="renovationCertificate">
+                            <mat-option *ngFor="let certificate of renovationCDs" [value]="certificate.cdNumber">
+                                {{certificate.cdNumber}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        <mat-error> La moneda es requerida </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Comentario</mat-label>
+                        <textarea formControlName="comment" matInput></textarea>
+                    </mat-form-field>
+                </div>
+            </form>
+
+            <div class="flex">
+                <button class="flex-auto" (click)="postCertificate()"
+                    [disabled]="newCertificateForm.invalid || hasRecords" mat-flat-button [color]="'primary'">
+                    <mat-icon>add</mat-icon>
+                    <span class="ml-2 mr-1">{{buttonText}}</span>
+                </button>
+                &nbsp;
+                <button (click)="closeDialog()" class="flex-auto" mat-flat-button [color]="'warn'">
+                    <mat-icon>close</mat-icon>
+                    <span class="ml-2 mr-1">Cerrar</span>
+                </button>
+            </div>
+
+        </div>
+    </ng-template>
+</div>
+
+<ng-template #weeklyRecords>
+    <div class="dialog-content">
+        <div class="dialog-header-card">
+            <h2 class="dialog-title">Registro Semanal</h2>
+        </div>
+
+        <mat-form-field style="width: 100%;padding-top: 1%">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Filtro">
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="table-container">
+            <div class="custom-table-wrapper">
+                <table mat-table [dataSource]="dataSourceRecords">
+
+                    <ng-container matColumnDef="week">
+                        <th mat-header-cell *matHeaderCellDef> Semana </th>
+                        <td mat-cell *matCellDef="let element"> {{element.week}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datesRange">
+                        <th mat-header-cell *matHeaderCellDef> Fechas de Semana </th>
+                        <td mat-cell *matCellDef="let element"> {{element.datesRange}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amountInCurrency">
+                        <th mat-header-cell *matHeaderCellDef> Valor en Moneda </th>
+                        <td mat-cell *matCellDef="let element"> {{element.amountInCurrency | currency:
+                            element.currency}} </td>
+                    </ng-container>
+
+                    <!-- Commented by spineda on may/31/2025 - Begin
+                     <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Valor </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.amount | currency: 'HNL'}} </td>
+                    </ng-container>
+                    Commented by spineda on may/31/2025 - End -->
+
+                    <ng-container matColumnDef="journal">
+                        <th mat-header-cell *matHeaderCellDef> Diario </th>
+                        <td mat-cell *matCellDef="let element"> {{element.journal}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsRecords"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsRecords;"></tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #CreateJournal>
+    <div class="dialog-content">
+        <div class="dialog-header-card">
+            <h2 class="dialog-title">Diario Semanal</h2>
+        </div>
+
+        <form [formGroup]="journalForm">
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Año</mat-label>
+                    <mat-select formControlName="year" (selectionChange)="getFiscalWeeks($event.value)">
+                        <mat-option *ngFor="let fiscalYear of fiscalYears" [value]="fiscalYear.recId">
+                            {{fiscalYear.year}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El año es obligatorio </mat-error>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field class="flex-auto">
+                    <mat-label>Semana</mat-label>
+                    <mat-select formControlName="week">
+                        <mat-option *ngFor="let fiscalWeek of fiscalWeeks" [value]="fiscalWeek.week">
+                            S{{fiscalWeek.week}} - {{fiscalWeek.startDate | date: 'dd/MMM/yyyy'}} al
+                            {{fiscalWeek.endDate | date: 'dd/MMM/yyyy'}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> La semana es obligatoria </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+
+        <div class="flex">
+            <button class="flex-auto" [disabled]="journalForm.invalid" (click)="postJournals()" mat-flat-button
+                [color]="'primary'">
+                <mat-icon>add</mat-icon>
+                <span class="ml-2 mr-1">Crear Diario</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<app-loading [body]="body"></app-loading>

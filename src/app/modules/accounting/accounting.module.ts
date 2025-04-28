@@ -20,6 +20,7 @@ import { DecimalPipe } from '@angular/common';
 import { TransactionTypePipe } from '@fuse/pipes/transaction-type.pipe';
 import { ProvidersReportComponent } from './providers-report/providers-report.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CertificateDepositComponent } from './certificate-deposit/certificate-deposit.component';
 
 const bankTransfersRoutes: Route[] = [
   {
@@ -35,14 +36,22 @@ const providersReportRoutes: Route[] = [
   }
 ];
 
+const certificateDepositRoutes: Route[] = [
+  {
+      path     : 'app-certificate-deposit',
+      component: CertificateDepositComponent
+  }
+];
+
 @NgModule({
   providers: [DatePipe, DecimalPipe],
-  declarations: [BankTransfersComponent, ProvidersReportComponent, TransactionTypePipe],
+  declarations: [BankTransfersComponent, ProvidersReportComponent, CertificateDepositComponent, TransactionTypePipe],
   imports: [
     SharedModule, //Comparte los modulos más comunes
     RouterModule.forChild([
       ...providersReportRoutes,
-      ...bankTransfersRoutes]),
+      ...bankTransfersRoutes,
+      ...certificateDepositRoutes]),
     MatIconModule,
     MatMenuModule,
     MatTableModule,

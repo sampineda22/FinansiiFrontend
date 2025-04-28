@@ -23,7 +23,6 @@ export class ReceiptBreakdownComponent implements OnInit, AfterViewInit, OnDestr
   receiptDetailBreakdown: ReceiptDetailBreakdown[] = [];
   dataSource = new MatTableDataSource<ReceiptDetailBreakdown>(this.receiptDetailBreakdown);
   displayedColumns: string[] = ['number', 'receiptNumber', 'documentNumber', 'productType', 'date', 'client', 'receiptAmountInCurrency', 'receiptAmount', 'canceledReceiptAmount', 'total'];
-  maxDate?: string;
   selectedSalesAgent: string = '';
   selectedAgent: string | null = null;
   title: string = '';
@@ -47,9 +46,6 @@ export class ReceiptBreakdownComponent implements OnInit, AfterViewInit, OnDestr
     , private datePipe: DatePipe
     , private _translocoService: TranslocoService
     , private cdr: ChangeDetectorRef) {
-    const today = new Date();
-    today.setDate(today.getDate() + 1);
-    this.maxDate = today.toISOString().split('T')[0];
   }
 
   ngOnInit() {
@@ -78,7 +74,7 @@ export class ReceiptBreakdownComponent implements OnInit, AfterViewInit, OnDestr
     this._onDestroy.complete();
   }
 
-  getReceiptDetailBreakdown(salesAgentPersonalCode: string/*, ConsultImports*/): void {
+  getReceiptDetailBreakdown(salesAgentPersonalCode: string): void {
     this.receiptDetailBreakdown = [];
     this.dataSource.data = [];
 
@@ -89,12 +85,6 @@ export class ReceiptBreakdownComponent implements OnInit, AfterViewInit, OnDestr
       this.title = 'Consultando Detalles de Recibos';
       this.body = 'Obteniendo datos. Esto podria tardar unos minutos...';
       this.loadingService.show();
-      /*if (ConsultImports) {
-        let dialogRef = this.dialog.open(ConsultImports, {
-          width: '500px',
-          disableClose: true
-        });
-      }*/
 
       this._receiptBreakdownService.getReceiptDetailBreakdown$(this.datePipe.transform(this.selectedWeek.startDate, 'yyyy-MM-dd'), this.datePipe.transform(this.selectedWeek.endDate, 'yyyy-MM-dd'), this.selectedSalesAgent, this._sharedService.getCompanyCode()).subscribe(
         (data) => {
@@ -102,8 +92,6 @@ export class ReceiptBreakdownComponent implements OnInit, AfterViewInit, OnDestr
           if (data.data.length <= 0) {
             Swal.fire("", "No se encontró información del asesor en las fechas seleccionadas", "info");
           } else {
-            console.log(data.data)
-            //this.dialog.closeAll();
             this.receiptDetailBreakdown = data.data;
             this.dataSource.data = data.data;
             this.pageSize = this._sharedService.setPageSize(data.data.length);

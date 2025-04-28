@@ -83,7 +83,7 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
-            {path: 'accounting', loadChildren: () => import('app/modules/accounting/accounting.module').then(m => m.AccountingModule)}
+            {path: 'accounting', loadChildren: () => import('app/modules/accounting/accounting.module').then(m => m.AccountingModule)},
         ]
     },
 

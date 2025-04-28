@@ -13,4 +13,5 @@ export interface BankConfiguration{
     fileRoute ?: string
     localFileRoute ?: string
     fileName ?: string
+    activeState ?: boolean
 }

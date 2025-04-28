@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core'
+import { AfterViewInit, Component, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator';
 import { BankStatement } from 'app/interfaces/accounting/bankStatement';
 import { BankTransfersService } from './bank-transfers.service';
@@ -68,6 +68,7 @@ export class BankTransfersComponent implements AfterViewInit {
         Swal.fire("", "No se encontraron bancos disponibles", "info");
       } else {
         this.bankConfigurations = data
+        this.bankConfigurations = this.bankConfigurations.filter(x => x.activeState == true);
       }
     })
   }
