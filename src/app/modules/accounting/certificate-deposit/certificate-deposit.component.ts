@@ -49,6 +49,9 @@ export class CertificateDepositComponent implements AfterViewInit {
   filteredDailyValues: number[] = [];
   selectedFiscalYear: number | null = null;
   hasRecords: boolean = false;
+  /*Commented by spineda on june/03/2025 - Begin*/
+  isChecked : boolean = false;
+ /*Commented by spineda on june/03/2025 - End*/
 
   dataSource = new MatTableDataSource<CertificateDeposit>(this.filteredCertificatesDeposit);
   displayedColumns: string[] = ['number', 'bank', 'cdNumber', 'currency', 'startDate', 'endDate', 'amount', 'ratePercentage', 'dailyIncome', 'actions', 'eraseFilters'];
@@ -99,18 +102,37 @@ export class CertificateDepositComponent implements AfterViewInit {
       } else {
         this.allCertificatesDeposit = data.data;
         this.filteredCertificatesDeposit = this.allCertificatesDeposit.filter(x => x.isEnabled == true);
-        this.dataSource.data = this.filteredCertificatesDeposit;
-        this.weeklyRecords = [];
-        this.dataSourceRecords.data = [];
-        this.setUniqueValues();
-
-        this.pageSize = this._sharedService.setPageSize(this.filteredCertificatesDeposit.length);
-        this.itemsPerPage = this.pageSize[0];
-        this.paginator.pageSize = this.itemsPerPage;
-        this.paginator._changePageSize(this.itemsPerPage);
+        /*Commented by spineda on june/03/2025 - Begin*/
+        this.fillDatasource();
+        /*Commented by spineda on june/03/2025 - End*/
       }
     })
   }
+
+  /*Commented by spineda on june/03/2025 - Begin*/
+  onCheckboxChange() {
+    if (this.isChecked) {
+        this.filteredCertificatesDeposit = this.allCertificatesDeposit;
+        this.fillDatasource();
+    } else {
+        this.filteredCertificatesDeposit = this.allCertificatesDeposit.filter(x => x.isEnabled == true);
+        this.fillDatasource();
+    }
+  }
+
+  fillDatasource() : void
+  {
+    this.dataSource.data = this.filteredCertificatesDeposit;
+    this.weeklyRecords = [];
+    this.dataSourceRecords.data = [];
+    this.setUniqueValues()
+
+    this.pageSize = this._sharedService.setPageSize(this.filteredCertificatesDeposit.length);
+    this.itemsPerPage = this.pageSize[0];
+    this.paginator.pageSize = this.itemsPerPage;
+    this.paginator._changePageSize(this.itemsPerPage);
+  }
+  /*Commented by spineda on june/03/2025 - End*/
 
   getWeeklyRecords(id: number, showSwal: boolean): Promise<void> {
     return new Promise((resolve, reject) => {

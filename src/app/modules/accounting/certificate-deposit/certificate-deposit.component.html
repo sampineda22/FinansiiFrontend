@@ -8,6 +8,9 @@
                         Certificados de Depósito
                     </div>
                 </div>
+                <!--Commented by spineda on june/03/2025 - Begin -->
+                <mat-checkbox [(ngModel)]="isChecked" (change)="onCheckboxChange()" class="example-margin">Mostrar todos</mat-checkbox>
+                <!--Commented by spineda on june/03/2025 - End -->
 
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
                     <button mat-flat-button class="mat-mdc-unelevated-button centered-button"
