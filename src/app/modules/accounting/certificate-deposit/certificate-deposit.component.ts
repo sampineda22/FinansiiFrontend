@@ -53,6 +53,10 @@ export class CertificateDepositComponent implements AfterViewInit {
   isChecked : boolean = false;
  /*Commented by spineda on june/03/2025 - End*/
 
+  /*Commented by spineda on dic/16/2025 - Begin*/
+  checkBoxForm: FormGroup;
+  /*Commented by spineda on dic/16/2025 - End*/
+
   dataSource = new MatTableDataSource<CertificateDeposit>(this.filteredCertificatesDeposit);
   displayedColumns: string[] = ['number', 'bank', 'cdNumber', 'currency', 'startDate', 'endDate', 'amount', 'ratePercentage', 'dailyIncome', 'actions', 'eraseFilters'];
   dataSourceRecords = new MatTableDataSource<WeeklyRecordsDto>(this.weeklyRecords);
@@ -88,12 +92,41 @@ export class CertificateDepositComponent implements AfterViewInit {
   }
 
   ngOnInit() {
+    this.checkBoxForm = new FormGroup({
+      showAll: new FormControl(false)
+    });
+
     this._translocoService.langChanges$.subscribe(() => {
       this.getAllCertificatesDeposit();
       this.getAllBanks();
       this.getFiscalYears();
     });
   }
+
+  /*Commented by spineda on dic/16/2025 - Begin*/
+  onCheckboxToggle(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      this.filteredCertificatesDeposit = this.allCertificatesDeposit;
+    } else {
+      this.filteredCertificatesDeposit = this.allCertificatesDeposit.filter(x => x.isEnabled === true);
+    }
+
+    this.dataSource.data = this.filteredCertificatesDeposit;
+    this.weeklyRecords = [];
+    this.dataSourceRecords.data = [];
+
+    this.pageSize = this._sharedService.setPageSize(this.filteredCertificatesDeposit.length);
+    this.itemsPerPage = this.pageSize[0];
+    this.paginator.pageSize = this.itemsPerPage;
+    this.paginator._changePageSize(this.itemsPerPage);
+
+    this.paginator.firstPage();
+
+    this.setUniqueValues();
+  }
+  /*Commented by spineda on dic/16/2025 - End*/
 
   getAllCertificatesDeposit(): void {
     this._certificateDepositService.getAllCertificatesDeposit$(this._sharedService.getCompanyCode()).subscribe(data => {
@@ -277,8 +310,8 @@ export class CertificateDepositComponent implements AfterViewInit {
         ratePercentage: this.newCertificateForm.get('rate').value,
         dailyIncome: 0,
         isEnabled: true,
-        renovationCertificate: this.newCertificateForm.get('renovationCertificate').value == '' ? null : 
-                               this.newCertificateForm.get('renovationCertificate').value,
+        renovationCertificate: this.newCertificateForm.get('renovationCertificate').value == '' ? null :
+          this.newCertificateForm.get('renovationCertificate').value,
         comment: this.newCertificateForm.get('comment').value,
         isCapitalizable: this.newCertificateForm.get('isCapitalizable').value,
         creationDate: todaysDate.toISOString(),
@@ -291,6 +324,9 @@ export class CertificateDepositComponent implements AfterViewInit {
           Swal.fire("Certificado Creado", "Se generó el nuevo certificado exitosamente", "success");
           this.getAllCertificatesDeposit();
           this.closeDialog();
+          /*Commented by spineda on dic/16/2025 - Begin*/
+          this.checkBoxForm.get('showAll')?.setValue(false);
+          /*Commented by spineda on dic/16/2025 - End*/
         },
         (error) => {
           this.loadingService.hide();
@@ -369,7 +405,7 @@ export class CertificateDepositComponent implements AfterViewInit {
           Swal.fire('Error', error.mensaje, 'error');
         } else if (error.error.mensaje) {
           Swal.fire('Error', error.error.mensaje, 'error');
-        }else{
+        } else {
           Swal.fire('Error', 'Ocurrió un error', 'error');
         }
       }
@@ -431,7 +467,9 @@ export class CertificateDepositComponent implements AfterViewInit {
     const bank: string = this.newCertificateForm.get('bank').value;
 
     if (currency != "" && bank != "") {
-      this.renovationCDs = this.filteredCertificatesDeposit.filter(x => x.bank == bank && x.currency == currency);
+      /*Commented by spineda on dic/16/2025 - Begin*/
+      this.renovationCDs = this.filteredCertificatesDeposit.filter(x => x.bank == bank && x.currency == currency && x.isEnabled == true);
+      /*Commented by spineda on dic/16/2025 - End*/
     }
   }
 

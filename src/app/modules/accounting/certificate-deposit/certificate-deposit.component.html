@@ -13,6 +13,13 @@
                 <!--Commented by spineda on june/03/2025 - End -->
 
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <form [formGroup]="checkBoxForm">
+                        <label>
+                            <input type="checkbox" formControlName="showAll" (change)="onCheckboxToggle($event)" />
+                            Mostrar Todos
+                        </label>
+                    </form>
+
                     <button mat-flat-button class="mat-mdc-unelevated-button centered-button"
                         style="background-color: #135880; color: white;" (click)="openDialog(newCertificate)">
                         <mat-icon>add_circle</mat-icon>
@@ -394,7 +401,7 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
                         <mat-error> La tasa de interés es requerida </mat-error>
                     </mat-form-field>
-                    <mat-checkbox formControlName="isCapitalizable" >¿Es
+                    <mat-checkbox formControlName="isCapitalizable">¿Es
                         capitalizable?</mat-checkbox>
                 </div>
 
