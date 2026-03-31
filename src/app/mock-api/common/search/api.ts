@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
-import { FuseNavigationItem, FuseNavigationService } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
-import { defaultNavigation } from 'app/mock-api/common/navigation/data';
 import { contacts } from 'app/mock-api/apps/contacts/data';
 import { tasks } from 'app/mock-api/apps/tasks/data';
+import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SearchMockApi
 {
+    /*Commented on 2026-mar.-09 by spineda - Begin
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
+    Commented on 2026-mar.-09 by spineda - End*/
     private readonly _contacts: any[] = contacts;
     private readonly _tasks: any[] = tasks;
 
@@ -20,7 +21,9 @@ export class SearchMockApi
      */
     constructor(
         private _fuseMockApiService: FuseMockApiService,
-        private _fuseNavigationService: FuseNavigationService
+        /*Commented on 2026-mar.-09 by spineda - Begin*/
+        private _navigationService: NavigationService
+        /*Commented on 2026-mar.-09 by spineda - End*/
     )
     {
         // Register Mock API handlers
@@ -34,11 +37,13 @@ export class SearchMockApi
     /**
      * Register Mock API handlers
      */
+
     registerHandlers(): void
     {
         // Get the flat navigation and store it
-        const flatNavigation = this._fuseNavigationService.getFlatNavigation(this._defaultNavigation);
-
+        /*Commented on 2026-mar.-05 by spineda - Begin*/
+        //const flatNavigation = this._fuseNavigationService.getFlatNavigation(this._defaultNavigation);
+        /*Commented on 2026-mar.-05 by spineda - End*/
         // -----------------------------------------------------------------------------------------------------
         // @ Search results - GET
         // -----------------------------------------------------------------------------------------------------
@@ -46,8 +51,11 @@ export class SearchMockApi
             .onPost('api/common/search')
             .reply(({request}) => {
 
+                /*Commented on 2026-mar.-09 by spineda - Begin*/
                 // Get the search query
-                const query = cloneDeep(request.body.query.toLowerCase());
+                //const query = cloneDeep(request.body.query.toLowerCase());
+                const query = cloneDeep(request.body?.query?.toLowerCase?.() ?? '');
+                /*Commented on 2026-mar.-09 by spineda - End*/
 
                 // If the search query is an empty string,
                 // return an empty array
@@ -55,6 +63,10 @@ export class SearchMockApi
                 {
                     return [200, {results: []}];
                 }
+
+                /*Commented on 2026-mar.-09 by spineda - Begin*/
+                const flatNavigation = cloneDeep(this._navigationService.flatNavigationSnapshot);
+                /*Commented on 2026-mar.-09 by spineda - End*/
 
                 // Filter the contacts
                 const contactsResults = cloneDeep(this._contacts)

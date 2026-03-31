@@ -1,0 +1,240 @@
+<div class="flex items-center mt-10 sm:mt-0 sm:ml-2 space-x-3">
+    <mat-form-field style="width: 100%;padding-top: 1%">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Filtro">
+        <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <button (click)="openTaxDialog(TaxDialogTemplate, null)" mat-flat-button class="mat-mdc-unelevated-button centered-button"
+        style="background-color: #135880; color: white;">
+        <mat-icon>add_circle</mat-icon>
+        <span class="ml-2 mr-1">Nuevo Grupo</span>
+    </button>
+</div>
+
+<table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="grupoImpuestoGravado">
+        <th mat-header-cell *matHeaderCellDef> Grupo Impuesto Gravado
+            <button mat-icon-button [matMenuTriggerFor]="impGravMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #impGravMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('grupoImpuestoGravado', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('grupoImpuestoGravado', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterImpGravValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('grupoImpuestoGravado');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredImpGravValues"
+                        [checked]="selectedFilters.grupoImpuestoGravado.has(value)"
+                        (change)="onFilterChange('grupoImpuestoGravado', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.grupoImpuestoGravado}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="grupoImpuestoArticuloGravado">
+        <th mat-header-cell *matHeaderCellDef> Grupo Impuesto Articulo Gravado
+            <button mat-icon-button [matMenuTriggerFor]="impArtMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #impArtMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('grupoImpuestoArticuloGravado', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('grupoImpuestoArticuloGravado', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterImpArtValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('grupoImpuestoArticuloGravado');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredImpArtValues" [checked]="selectedFilters.grupoImpuestoArticuloGravado.has(value)"
+                        (change)="onFilterChange('grupoImpuestoArticuloGravado', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.grupoImpuestoArticuloGravado}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="grupoImpuestoExento">
+        <th mat-header-cell *matHeaderCellDef> Grupo Impuesto Exento
+            <button mat-icon-button [matMenuTriggerFor]="impExenMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #impExenMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('grupoImpuestoExento', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('grupoImpuestoExento', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterImpExenValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('grupoImpuestoExento');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredImpExenValues"
+                        [checked]="selectedFilters.grupoImpuestoExento.has(value)"
+                        (change)="onFilterChange('grupoImpuestoExento', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.grupoImpuestoExento}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="grupoImpuestoArticuloExento">
+        <th mat-header-cell *matHeaderCellDef> Grupo Impuesto Articulo Exento
+            <button mat-icon-button [matMenuTriggerFor]="impArExMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #impArExMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('grupoImpuestoArticuloExento', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('grupoImpuestoArticuloExento', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterImpArExValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('grupoImpuestoArticuloExento');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredImpArExValues"
+                        [checked]="selectedFilters.grupoImpuestoArticuloExento.has(value)"
+                        (change)="onFilterChange('grupoImpuestoArticuloExento', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.grupoImpuestoArticuloExento}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let element">
+            <button (click)="openTaxDialog(TaxDialogTemplate, element)" mat-mini-fab aria-label="Editar"
+                title="Editar">
+                <mat-icon>edit_square</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="eraseFilters">
+        <th mat-header-cell *matHeaderCellDef>
+            <button (click)="resetFilters()" [disabled]="this.allTaxGroups.length <= 0"
+                style="background-color: #920101; color: white;" mat-mini-fab aria-label="Borrar todos los filtros">
+                <mat-icon>filter_list_off</mat-icon>
+            </button>
+        </th>
+        <td mat-cell *matCellDef="let element"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+</mat-paginator>
+
+<ng-template #TaxDialogTemplate>
+    <div class="dialog-content">
+        <div class="dialog-header-card">
+            <h2 class="dialog-title">Grupo de Impuestos</h2>
+        </div>
+
+        <form [formGroup]="taxForm">
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Grupo Impuestos Gravado</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" formControlName="grupoImpuestoGravado" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El grupo de mpuestos gravado es requerido</mat-error>
+                </mat-form-field>
+                &nbsp;
+            </div>
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Grupo Impuestos Articulo Gravado</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" formControlName="grupoImpuestoArticuloGravado" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El código del diario es requerido</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Grupo Impuestos Exento</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" formControlName="grupoImpuestoExento" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El grupo de impuestos exento es requerido</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Grupo Impuestos Articulo Exento</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" formControlName="grupoImpuestoArticuloExento" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El grupo de impuestos articulo exento es requerido</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+
+        <div class="flex">
+            <button class="flex-auto" (click)="postTaxGroup()" [disabled]="taxForm.invalid" mat-flat-button
+                [color]="'accent'">
+                <mat-icon>add</mat-icon>
+                <span class="ml-2 mr-1">{{ buttonText }}</span>
+            </button>
+        </div>
+    </div>
+</ng-template>

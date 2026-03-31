@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core'
 import { cloneDeep } from 'lodash-es';
-import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
-import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation } from 'app/mock-api/common/navigation/data';
+import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Injectable({
     providedIn: 'root'
@@ -10,14 +9,19 @@ import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalN
 export class NavigationMockApi
 {
     //private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
-    private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
+    /*Commented on 2026-feb.-27 by spineda - Begin*/
+    //private /*readonly*/ _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
+    /*Commented on 2026-feb.-27 by spineda - End*/
     //private readonly _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
     //private readonly _horizontalNavigation: FuseNavigationItem[] = horizontalNavigation;
 
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
+    constructor(private _fuseMockApiService: FuseMockApiService,
+                /*Commented on 2026-mar.-05 by spineda - Begin*/
+                private _navigationService: NavigationService
+                /*Commented on 2026-mar.-05 by spineda - End*/)
     {
         // Register Mock API handlers
         this.registerHandlers();
@@ -75,12 +79,15 @@ export class NavigationMockApi
                 
                 return [
                     200,
-                    {
+                    //{
                         //compact   : cloneDeep(this._compactNavigation),
-                        default   : cloneDeep(this._defaultNavigation)
+                        /*Commented on 2026-mar.-05 by spineda - Begin*/
+                        //default   : cloneDeep(this._defaultNavigation)
+                        cloneDeep(this._navigationService.navigationSnapshot)
+                        /*Commented on 2026-mar.-05 by spineda - End*/
                         //futuristic: cloneDeep(this._futuristicNavigation),
                         //horizontal: cloneDeep(this._horizontalNavigation)
-                    }
+                    //}
                 ];
             });
     }

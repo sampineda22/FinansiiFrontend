@@ -1,0 +1,220 @@
+<div class="flex items-center mt-10 sm:mt-0 sm:ml-2 space-x-3">
+  <mat-form-field style="width: 100%;padding-top: 1%">
+    <input matInput (keyup)="applyFilter($event)" placeholder="Filtro">
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <button mat-flat-button class="mat-mdc-unelevated-button centered-button"
+    (click)="openExpenseAccountDialog(ExpensesDialogTemplate, null)" style="background-color: #135880; color: white;">
+    <mat-icon>add_circle</mat-icon>
+    <span class="ml-2 mr-1">Crear</span>
+  </button>
+</div>
+
+<table mat-table [dataSource]="dataSource">
+  <ng-container matColumnDef="number">
+    <th mat-header-cell *matHeaderCellDef> No. </th>
+    <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="accountName">
+    <th mat-header-cell *matHeaderCellDef> Cuenta
+      <button mat-icon-button [matMenuTriggerFor]="accountNameMenu">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+      <mat-menu #accountNameMenu="matMenu" class="custom-mat-menu">
+        <button mat-menu-item (click)="sortTable('accountName', 'asc');">
+          <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+          A-Z
+        </button>
+        <button mat-menu-item (click)="sortTable('accountName', 'desc');">
+          <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+          Z-A
+        </button>
+        <div (click)="$event.stopPropagation();">
+          <mat-form-field style="width: 95%; margin-left: 2%;">
+            <input matInput (input)="filterAccountNameValues($event.target.value)" placeholder="Type to search" />
+          </mat-form-field>
+        </div>
+        <button mat-menu-item (click)="clearColumnFilter('accountName');">
+          Limpiar Filtro
+        </button>
+        <mat-divider></mat-divider>
+        <div (click)="$event.stopPropagation();">
+          <mat-checkbox *ngFor="let value of filteredAccountNameValues"
+            [checked]="selectedFilters.accountName.has(value)"
+            (change)="onFilterChange('accountName', value, $event.checked);">
+            {{ value }}
+          </mat-checkbox>
+        </div>
+      </mat-menu>
+    </th>
+    <td mat-cell *matCellDef="let element">{{element.accountId}} - {{element.accountName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expenseTypeName">
+    <th mat-header-cell *matHeaderCellDef> Tipo de Gasto
+      <button mat-icon-button [matMenuTriggerFor]="expenseTypeNameMenu">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+      <mat-menu #expenseTypeNameMenu="matMenu" class="custom-mat-menu">
+        <button mat-menu-item (click)="sortTable('expenseTypeName', 'asc');">
+          <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+          A-Z
+        </button>
+        <button mat-menu-item (click)="sortTable('expenseTypeName', 'desc');">
+          <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+          Z-A
+        </button>
+        <div (click)="$event.stopPropagation();">
+          <mat-form-field style="width: 95%; margin-left: 2%;">
+            <input matInput (input)="filterExpenseTypeNameValues($event.target.value)" placeholder="Type to search" />
+          </mat-form-field>
+        </div>
+        <button mat-menu-item (click)="clearColumnFilter('expenseTypeName');">
+          Limpiar Filtro
+        </button>
+        <mat-divider></mat-divider>
+        <div (click)="$event.stopPropagation();">
+          <mat-checkbox *ngFor="let value of filteredExpenseTypeNameValues"
+            [checked]="selectedFilters.expenseTypeName.has(value)"
+            (change)="onFilterChange('expenseTypeName', value, $event.checked);">
+            {{ value }}
+          </mat-checkbox>
+        </div>
+      </mat-menu>
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.expenseTypeName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expenseCategoryName">
+    <th mat-header-cell *matHeaderCellDef> Categoria de Gasto
+      <button mat-icon-button [matMenuTriggerFor]="expenseCategoryNameMenu">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+      <mat-menu #expenseCategoryNameMenu="matMenu" class="custom-mat-menu">
+        <button mat-menu-item (click)="sortTable('expenseCategoryName', 'asc');">
+          <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+          A-Z
+        </button>
+        <button mat-menu-item (click)="sortTable('expenseCategoryName', 'desc');">
+          <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+          Z-A
+        </button>
+        <div (click)="$event.stopPropagation();">
+          <mat-form-field style="width: 95%; margin-left: 2%;">
+            <input matInput (input)="filterExpenseCategoryNameValues($event.target.value)"
+              placeholder="Type to search" />
+          </mat-form-field>
+        </div>
+        <button mat-menu-item (click)="clearColumnFilter('expenseCategoryName');">
+          Limpiar Filtro
+        </button>
+        <mat-divider></mat-divider>
+        <div (click)="$event.stopPropagation();">
+          <mat-checkbox *ngFor="let value of filteredExpenseCategoryNameValues"
+            [checked]="selectedFilters.expenseCategoryName.has(value)"
+            (change)="onFilterChange('expenseCategoryName', value, $event.checked);">
+            {{ value }}
+          </mat-checkbox>
+        </div>
+      </mat-menu>
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.expenseCategoryName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+    <td mat-cell *matCellDef="let element">
+      <button (click)="openExpenseAccountDialog(ExpensesDialogTemplate, element)" mat-mini-fab aria-label="Editar"
+        title="Editar">
+        <mat-icon>edit_square</mat-icon>
+      </button>
+      &nbsp;
+      <button (click)="deleteExpenseAccount(element)" [color]="'warn'" mat-mini-fab aria-label="Eliminar" title="Eliminar">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="eraseFilters">
+    <th mat-header-cell *matHeaderCellDef>
+      <button (click)="resetFilters()" [disabled]="this.allExpensesAccounts.length <= 0"
+        style="background-color: #920101; color: white;" mat-mini-fab aria-label="Borrar todos los filtros">
+        <mat-icon>filter_list_off</mat-icon>
+      </button>
+    </th>
+    <td mat-cell *matCellDef="let element"></td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+</mat-paginator>
+
+<ng-template #ExpensesDialogTemplate>
+  <div class="dialog-content">
+    <div class="dialog-header-card">
+      <h2 class="dialog-title">Cuentas de Gastos</h2>
+    </div>
+
+    <form [formGroup]="expensiveAccountForm">
+      <div class="flex">
+        <mat-form-field class="flex-auto">
+          <mat-label>Cuentas</mat-label>
+          <mat-select formControlName="accountId">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="mainAccountFilterCtrl" placeholderLabel="Buscar cuenta"
+                noEntriesFoundLabel="No encontrado">
+              </ngx-mat-select-search>
+            </mat-option>
+
+            <mat-option *ngFor="let mainAccount of searchMainAccounts" [value]="mainAccount.mainAccountId">
+              {{ mainAccount.mainAccountId }} - {{ mainAccount.name }}
+            </mat-option>
+          </mat-select>
+
+          <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+          <mat-error> La cuenta es requerida </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex">
+        <mat-form-field class="flex-auto">
+          <mat-label>Tipo de Gasto</mat-label>
+          <mat-select (selectionChange)="getCategoriesFilter($event.value)" formControlName="idExpenseType">
+            <mat-option *ngFor="let expenseType of allExpensesTypes" [value]="expenseType.id">
+              {{expenseType.name}}
+            </mat-option>
+          </mat-select>
+          <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+          <mat-error> El tipo de gasto es requerido </mat-error>
+        </mat-form-field>
+        &nbsp;
+      </div>
+
+      <div class="flex">
+        <mat-form-field class="flex-auto">
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="idExpenseCategory">
+            <mat-option *ngFor="let expenseCategory of allExpensesCategories" [value]="expenseCategory.id">
+              {{expenseCategory.name}}
+            </mat-option>
+          </mat-select>
+          <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+          <mat-error> La categoria es requerida </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <div class="flex">
+      <button class="flex-auto" (click)="postPutExpenseAccount()" [disabled]="expensiveAccountForm.invalid"
+        mat-flat-button [color]="'accent'">
+        <mat-icon>add</mat-icon>
+        <span class="ml-2 mr-1">{{ buttonText }}</span>
+      </button>
+    </div>
+  </div>
+</ng-template>

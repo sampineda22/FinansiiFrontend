@@ -40,12 +40,19 @@ export const defaultNavigation: FuseNavigationItem[] = [
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
-    {
+    /*{
         id   : 'landing',
         title: 'Example',
         type : 'basic',
         icon : 'heroicons_outline:chart-pie',
         link : '/landing'
+    }*/
+   {
+        id   : 'app-bank-transfers',
+        title: 'Transferencias Bancarias',
+        type : 'basic',
+        icon : 'heroicons_solid:currency-dollar',
+        link : '/accounting/app-bank-transfers'
     }
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [

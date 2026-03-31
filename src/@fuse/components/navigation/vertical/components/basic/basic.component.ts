@@ -52,7 +52,7 @@ export class FuseVerticalNavigationBasicItemComponent implements OnInit, OnDestr
             this.item.isActiveMatchOptions ?? this.item.exactMatch
                 ? this._fuseUtilsService.exactMatchOptions
                 : this._fuseUtilsService.subsetMatchOptions;
-
+                
         // Get the parent navigation component
         this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 

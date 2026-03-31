@@ -1,0 +1,61 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-2xl md:text-6xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Configuración de Gastos
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <app-card>
+
+        <mat-tab-group>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>layers</mat-icon>
+                    Tipos de Gastos
+                </ng-template>
+                <app-expenses-types></app-expenses-types>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">category</mat-icon>
+                    Categoria de Gastos
+                </ng-template>
+                <app-expenses-categories></app-expenses-categories>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">account_balance_wallet</mat-icon>
+                    Cuenta Contrapartida
+                </ng-template>
+                <app-expenses-accounts></app-expenses-accounts>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">view_comfy_alt</mat-icon>
+                    Grupo de Impuestos
+                </ng-template>
+                <app-tax-group></app-tax-group>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">groups</mat-icon>
+                    Usuarios
+                </ng-template>
+                <app-users></app-users>
+            </mat-tab>
+        </mat-tab-group>
+
+    </app-card>
+</div>

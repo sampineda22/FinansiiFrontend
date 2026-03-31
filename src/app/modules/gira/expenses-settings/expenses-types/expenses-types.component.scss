@@ -1,4 +1,4 @@
-@import '../../../../app/shared/shared.scss';
+@import '../../../../shared/shared.scss';
 
 .table-container {
     max-height: 700px;
@@ -6,7 +6,7 @@
 }
 
 .custom-table {
-    width: 100%;
+    width: 100%; 
     table-layout: fixed;
     border-collapse: collapse;
 }
@@ -40,11 +40,6 @@
     background-color: #f2f2f2;
 }
 
-.assigned-chip {
+.assigned-chip{
     background-color: #f7bb16
-}
-
-.custom-mat-menu {
-    max-height: 20%;
-    overflow-y: auto;
 }

@@ -1,0 +1,421 @@
+<div class="flex items-center mt-10 sm:mt-0 sm:ml-2 space-x-3">
+    <mat-form-field style="width: 100%;padding-top: 1%">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Filtro">
+        <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <button mat-flat-button class="mat-mdc-unelevated-button centered-button" (click)="openCategoryDialog(CategoryDialogTemplate, null)"
+        style="background-color: #135880; color: white;">
+        <mat-icon>add_circle</mat-icon>
+        <span class="ml-2 mr-1">Nueva Categoria</span>
+    </button>
+</div>
+
+<table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="typeName">
+        <th mat-header-cell *matHeaderCellDef> Tipo de Gasto
+            <button mat-icon-button [matMenuTriggerFor]="typeNameMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #typeNameMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('typeName', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('typeName', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterTypeNameValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('typeName');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredTypeNameValues"
+                        [checked]="selectedFilters.typeName.has(value)"
+                        (change)="onFilterChange('typeName', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.expenseType.name}}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Categoria
+            <button mat-icon-button [matMenuTriggerFor]="nameMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #nameMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('name', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('name', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterNameValues($event.target.value)" placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('name');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredNameValues" [checked]="selectedFilters.name.has(value)"
+                        (change)="onFilterChange('name', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isInvoiceRequired">
+        <th mat-header-cell *matHeaderCellDef> Factura Obligatoria
+            <button mat-icon-button [matMenuTriggerFor]="invoiceMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #invoiceMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('isInvoiceRequired', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('isInvoiceRequired', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterInvoiceValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('isInvoiceRequired');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredInvoiceValues"
+                        [checked]="selectedFilters.isInvoiceRequired.has(value)"
+                        (change)="onFilterChange('isInvoiceRequired', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            @if(element.isInvoiceRequired == 1){
+            <mat-icon style="color: seagreen;">check_circle</mat-icon>
+            }@else{
+            <mat-icon style="color: #920101;">cancel</mat-icon>
+            }
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isDescriptionRequired">
+        <th mat-header-cell *matHeaderCellDef> Descripción Obligatoria
+            <button mat-icon-button [matMenuTriggerFor]="descriptionMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #descriptionMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('isDescriptionRequired', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('isDescriptionRequired', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterDescriptionValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('isDescriptionRequired');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredDescriptionValues"
+                        [checked]="selectedFilters.isDescriptionRequired.has(value)"
+                        (change)="onFilterChange('isDescriptionRequired', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            @if(element.isDescriptionRequired == 1){
+            <mat-icon style="color: seagreen;">check_circle</mat-icon>
+            }@else{
+            <mat-icon style="color: #920101;">cancel</mat-icon>
+            }
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isImageRequired">
+        <th mat-header-cell *matHeaderCellDef> Imagen Obligatoria
+            <button mat-icon-button [matMenuTriggerFor]="imageMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #imageMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('isImageRequired', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('isImageRequired', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterImageValues($event.target.value)" placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('isImageRequired');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredImageValues"
+                        [checked]="selectedFilters.isImageRequired.has(value)"
+                        (change)="onFilterChange('isImageRequired', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            @if(element.isImageRequired == 1){
+            <mat-icon style="color: seagreen;">check_circle</mat-icon>
+            }@else{
+            <mat-icon style="color: #920101;">cancel</mat-icon>
+            }
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Estado
+            <button mat-icon-button [matMenuTriggerFor]="statusMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #statusMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('status', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('status', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterStatusValue($event.target.value)" placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('status');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredStatusValues"
+                        [checked]="selectedFilters.status.has(value)"
+                        (change)="onFilterChange('status', value, $event.checked);">
+                        {{ value | status}}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            @if(element.status == 1){
+            <button mat-flat-button style="color: #03af2e; background-color: #84e088b2; border: 2px solid #03af2e"> {{
+                element.status | status }}
+                <mat-slide-toggle (change)="postStatus(element, $event)" [color]="warn" [checked]="element.status">
+                </mat-slide-toggle>
+            </button>
+            }@else{
+            <button mat-flat-button style="color: #d30314; background-color: #f39191b2; border: 2px solid #d30314"> {{
+                element.status | status }}
+                <mat-slide-toggle (change)="postStatus(element, $event)" [color]="warn" [checked]="element.status">
+                </mat-slide-toggle>
+            </button>
+            }
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="vendAccount">
+        <th mat-header-cell *matHeaderCellDef> Cuenta del Proveedor
+            <button mat-icon-button [matMenuTriggerFor]="vendAccountMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #vendAccountMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('vendAccount', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('vendAccount', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterVendAccountValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('vendAccount');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredVendAccountValues"
+                        [checked]="selectedFilters.vendAccount.has(value)"
+                        (change)="onFilterChange('vendAccount', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.vendAccount}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="taxGroup">
+        <th mat-header-cell *matHeaderCellDef> Grupo de Impuestos
+            <button mat-icon-button [matMenuTriggerFor]="taxGroupMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #taxGroupMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('taxGroup', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('taxGroup', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterTaxGroupValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('taxGroup');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredTaxGroupValues"
+                        [checked]="selectedFilters.taxGroup.has(value)"
+                        (change)="onFilterChange('taxGroup', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.taxGroup}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let element">
+            <button (click)="openCategoryDialog(CategoryDialogTemplate, element)" mat-mini-fab aria-label="Editar"
+                title="Editar">
+                <mat-icon>edit_square</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="eraseFilters">
+        <th mat-header-cell *matHeaderCellDef>
+            <button (click)="resetFilters()" [disabled]="this.allExpensesCategories.length <= 0"
+                style="background-color: #920101; color: white;" mat-mini-fab aria-label="Borrar todos los filtros">
+                <mat-icon>filter_list_off</mat-icon>
+            </button>
+        </th>
+        <td mat-cell *matCellDef="let element"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+</mat-paginator>
+
+<ng-template #CategoryDialogTemplate>
+    <div class="dialog-content">
+        <div class="dialog-header-card">
+            <h2 class="dialog-title">{{ buttonText }} Categoría de Gasto</h2>
+        </div>
+
+        <form [formGroup]="categoryForm">
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Nombre de Categoria de Gasto</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" formControlName="name" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El nombre de la categoria es requerido</mat-error>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field class="flex-auto">
+                    <mat-label>Tipo de Gasto</mat-label>
+                    <mat-select formControlName="idExpenseType">
+                        <mat-option *ngFor="let expenseType of allExpenseTypes" [value]="expenseType.id">
+                            {{expenseType.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El tipo de gasto es requerido </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Grupo de Impuestos</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" formControlName="taxGroup" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field class="flex-auto">
+                    <mat-label>Código de Proveedor</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" formControlName="vendAccount" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-checkbox formControlName="isInvoiceRequired">¿La factura es obligatoria?</mat-checkbox>
+                &nbsp;
+                <mat-checkbox formControlName="isDescriptionRequired">¿La descripción es obligatoria?</mat-checkbox>
+                &nbsp;
+                <mat-checkbox formControlName="isImageRequired">¿La imagen es obligatoria?</mat-checkbox>
+                &nbsp;
+            </div>
+        </form>
+
+        <div class="flex">
+            <button class="flex-auto" style="margin-top: 30px;" (click)="createEditExpenseCategory()" [disabled]="categoryForm.invalid"
+                mat-flat-button [color]="'accent'">
+                <mat-icon>add</mat-icon>
+                <span class="ml-2 mr-1">{{ buttonText }}</span>
+            </button>
+        </div>
+    </div>
+</ng-template>

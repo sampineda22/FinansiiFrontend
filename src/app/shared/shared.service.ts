@@ -1,5 +1,8 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { localStorage } from 'app/modules/auth/interfaces/localStorage';
+import { environment } from 'environments/environment.development';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -8,8 +11,11 @@ import Swal from 'sweetalert2';
 export class SharedService {
 
   private actualComponent: string;
+  /*Commented on 2026-mar.-05 by spineda - Begin*/
+  private api: string = environment.apiURL;
 
-  constructor() { }
+  constructor(private http: HttpClient, public dialog: MatDialog) { }
+  /*Commented on 2026-mar.-05 by spineda - End*/
 
   ngOnInit(): void {
     this.getCompanyCode();
@@ -28,8 +34,8 @@ export class SharedService {
   }
 
   getUser() {
-    const access_Logged: any = JSON.parse(localStorage.getItem('access_Logged'));
-    return access_Logged.userId;
+    const access_Logged: any = JSON.parse(localStorage.getItem('access_Logged') || 'null');
+    return access_Logged?.userId ?? access_Logged?.user?.id ?? access_Logged?.user?.user ?? null;
   }
 
   setActualComponent(name: string) {
@@ -63,4 +69,16 @@ export class SharedService {
     }
   }
 
+  /*Commented on 2026-mar.-05 by spineda - Begin*/
+  getScreensByUserId$(userId: string) {
+    const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
+    return this.http.get<any>(`${this.api}Screen/GetScreensByUser/${userId}`, { headers });
+  }
+  /*Commented on 2026-mar.-05 by spineda - End*/
+
+  /*Commented on 2026-mar.-13 by spineda - Begin*/
+  closeDialog() {
+    this.dialog.closeAll();
+  }
+  /*Commented on 2026-mar.-13 by spineda - End*/
 }

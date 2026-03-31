@@ -8,6 +8,14 @@ import { CurrencyPipe } from '@fuse/pipes/currency.pipe';
 import { LoadingService } from '@fuse/components/loading/loading.service';
 import { CommaSeparationPipe } from '@fuse/pipes/comma-separation.pipe';
 import {MatDividerModule} from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     declarations: [CardComponent, LoadingComponent, MatDialogComponent, CurrencyPipe, CommaSeparationPipe],
@@ -27,7 +35,15 @@ import {MatDividerModule} from '@angular/material/divider';
         CurrencyPipe,
         LoadingComponent,
         CommaSeparationPipe,
-        MatDividerModule
+        MatDividerModule,
+        MatIconModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatMenuModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatCheckboxModule,
+        MatButtonModule,
     ],
     providers: [LoadingService]
 })
