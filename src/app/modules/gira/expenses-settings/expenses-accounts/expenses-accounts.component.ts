@@ -11,7 +11,6 @@ import Swal from 'sweetalert2';
 import { ExpenseType } from 'app/interfaces/gira/expenseType';
 import { ExpenseCategory } from 'app/interfaces/gira/expenseCategory';
 import { MainAccountDto } from 'app/interfaces/gira/mainAccountDto';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-expenses-accounts',

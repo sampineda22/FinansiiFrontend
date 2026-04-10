@@ -18,7 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 const receiptBreakdownRoutes: Route[] = [
   {
-    path : '',
+    path : 'app-receipt-breakdown',
     component: ReceiptBreakdownComponent
   }
 ]

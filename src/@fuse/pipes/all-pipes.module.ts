@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { CurrencyPipe } from './currency.pipe';
+import { CurrencyByCompanyPipe } from './currency-by-company.pipe';
 
 @NgModule({
   declarations: [
-    CurrencyPipe
+    CurrencyPipe,
+    CurrencyByCompanyPipe
   ],
   imports     : [
     CommonModule
@@ -13,7 +15,8 @@ import { CurrencyPipe } from './currency.pipe';
     DecimalPipe
   ],
   exports     : [
-    CurrencyPipe
+    CurrencyPipe,
+    CurrencyByCompanyPipe
   ]
 })
 export class AllPipesModule { }

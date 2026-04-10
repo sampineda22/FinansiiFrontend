@@ -105,7 +105,7 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
-            { path: 'app-receipt-breakdown', loadChildren: () => import('app/modules/credits/credits.module').then(m => m.CreditsModule) }
+            { path: 'credits', loadChildren: () => import('app/modules/credits/credits.module').then(m => m.CreditsModule) }
         ]
     },
 

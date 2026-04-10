@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { ExpensesSettingsComponent } from './expenses-settings/expenses-settings.component';
 import { SharedModule } from 'app/shared/shared.module';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StatusPipe } from '@fuse/pipes/status.pipe';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ExpensesTypesComponent } from './expenses-settings/expenses-types/expenses-types.component';
 import { ExpensesCategoriesComponent } from './expenses-settings/expenses-categories/expenses-categories.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -12,6 +12,14 @@ import { ExpensesAccountsComponent } from './expenses-settings/expenses-accounts
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { TaxGroupComponent } from './expenses-settings/tax-group/tax-group.component';
 import { UsersComponent } from './expenses-settings/users/users.component';
+import { HistoricalComponent } from './historical/historical.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { CurrencyByCompanyPipe } from '@fuse/pipes/currency-by-company.pipe';
+import { DecimalPipe } from '@angular/common';
+import { MY_FORMATS } from 'app/interfaces/general/myFormats';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 
 const expensesSettingsRoutes: Route[] = [
   {
@@ -20,16 +28,30 @@ const expensesSettingsRoutes: Route[] = [
   }
 ];
 
+const historicalRoutes: Route[] = [
+  {
+    path: 'app-historical',
+    component: HistoricalComponent
+  }
+];
+
 @NgModule({
-  declarations: [ExpensesSettingsComponent, StatusPipe, ExpensesTypesComponent, ExpensesCategoriesComponent, ExpensesAccountsComponent, TaxGroupComponent, UsersComponent],
+  providers: [DecimalPipe,
+    { provide: MAT_DATE_LOCALE, useValue: 'es' },
+    provideMomentDateAdapter(MY_FORMATS),
+  ],
+  declarations: [ExpensesSettingsComponent, StatusPipe, ExpensesTypesComponent, ExpensesCategoriesComponent, ExpensesAccountsComponent, TaxGroupComponent, UsersComponent, HistoricalComponent, CurrencyByCompanyPipe],
   imports: [
     SharedModule,
     RouterModule.forChild([
-      ...expensesSettingsRoutes]),
-      MatSlideToggleModule,
-      MatTabsModule,
-      MatSelectModule,
-      NgxMatSelectSearchModule
+      ...expensesSettingsRoutes,
+      ...historicalRoutes]),
+    MatSlideToggleModule,
+    MatTabsModule,
+    MatSelectModule,
+    NgxMatSelectSearchModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [RouterModule]
 })

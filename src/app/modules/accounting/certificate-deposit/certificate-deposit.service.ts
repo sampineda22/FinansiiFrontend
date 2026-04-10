@@ -77,7 +77,7 @@ export class CertificateDepositService {
     );
   }
 
-  private handleJsonError(blob: Blob): Observable<any> {
+  public handleJsonError(blob: Blob): Observable<any> {
     return new Observable(observer => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -93,7 +93,7 @@ export class CertificateDepositService {
     });
   }
 
-  private handleFileDownload(blob: Blob): Blob {
+  public handleFileDownload(blob: Blob): Blob {
     return blob;
   }
 }

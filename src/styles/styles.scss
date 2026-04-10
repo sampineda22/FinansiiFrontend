@@ -2,3 +2,10 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
+.swal2-popup .swal2-confirm {
+  background-color: #3991b1 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}

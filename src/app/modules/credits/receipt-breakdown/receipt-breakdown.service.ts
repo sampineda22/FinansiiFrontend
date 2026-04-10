@@ -22,7 +22,7 @@ export class ReceiptBreakdownService {
     return this.http.get<EntityResponse<ReceiptDetailBreakdown[]>>(`${this.api}ReceiptDetailBreakdown/GetReceiptDetailBreakdown/${startDate}/${endDate}/${salesmanCode}/${companyCode}`, { headers });
   }
 
-  getSalesAgents$(companyCode ?: string){
+  getSalesAgents$(companyCode: string){
     const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
     return this.http.get<EntityResponse<SalesAgent[]>>(`${this.api}ReceiptDetailBreakdown/GetSalesAgents/${companyCode}`, { headers });
   }
