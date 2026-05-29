@@ -39,11 +39,12 @@
                 &nbsp;
                 &nbsp;
 
-                <button mat-flat-button class="bg-accent mat-mdc-unelevated-button centered-button"
-                    [disabled]="this.journalLines.length <= 0" style="color: white;" (click)="createReport()">
-                    <mat-icon svgIcon="heroicons_solid:document"></mat-icon>
-                    <span class="ml-2 mr-1">Crear Reporte</span>
-                </button>
+                <button mat-flat-button class="mat-mdc-unelevated-button centered-button"
+                        (click)="createReport()" style="background-color: #106b04; color: white;"
+                        [disabled]="this.journalLines.length <= 0">
+                        <mat-icon>download</mat-icon>
+                        <span class="ml-2 mr-1">Descargar Reporte</span>
+                    </button>
             </div>
         </div>
     </div>
