@@ -29,6 +29,7 @@ export class ExpensesAccountsComponent implements AfterViewInit, OnDestroy {
   displayedColumns: string[] = ['number', 'accountName', 'expenseTypeName', 'expenseCategoryName', 'actions'];
   filterValue: string = '';
   editExpenseId: number = 0;
+  editCategoryId: number = 0;
   itemsPerPage: number = 10;
   pageSize: number[] = [];
 
@@ -107,6 +108,14 @@ export class ExpensesAccountsComponent implements AfterViewInit, OnDestroy {
   getCategoriesFilter(idExpenseType: number): void {
     this.allExpensesCategories = (this._expensesSettingsService.getAllExpensesCategories()).filter(x => x.idExpenseType === idExpenseType);
     this.expensiveAccountForm.get('idExpenseCategory').setValue('');
+
+    if (this.editExpenseId == undefined || this.editExpenseId == 0) {
+      const usedCategoryIds = this.allExpensesAccounts.map(a => a.idExpenseCategory);
+
+      this.allExpensesCategories = this.allExpensesCategories.filter(
+        x => x.id === this.editCategoryId || !usedCategoryIds.includes(x.id!)
+      );
+    }
   }
 
   getMainAccounts(): void {
@@ -184,12 +193,19 @@ export class ExpensesAccountsComponent implements AfterViewInit, OnDestroy {
   }
 
   openExpenseAccountDialog(expensesDialogTemplate, element: ExpenseAccountDto): void {
+    this.allExpensesCategories = [];
     this.allExpensesTypes = (this._expensesSettingsService.getAllExpensesTypes()).filter(x => x.state);
     this.editExpenseId = element?.id;
+    this.editCategoryId = element?.idExpenseCategory;
     this.buttonText = element == null ? "Crear" : "Editar";
 
     if (element != null) {
       this.allExpensesCategories = (this._expensesSettingsService.getAllExpensesCategories()).filter(x => x.idExpenseType === element.idExpenseType);
+      const usedCategoryIds = this.allExpensesAccounts.map(a => a.idExpenseCategory);
+
+      this.allExpensesCategories = this.allExpensesCategories.filter(
+        x => x.id === this.editCategoryId || !usedCategoryIds.includes(x.id!)
+      );
     }
 
     this.expensiveAccountForm = this._formBuilder.group({

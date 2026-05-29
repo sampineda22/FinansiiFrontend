@@ -5,7 +5,7 @@
     </mat-form-field>
 
     <button (click)="openTaxDialog(TaxDialogTemplate, null)" mat-flat-button class="mat-mdc-unelevated-button centered-button"
-        style="background-color: #135880; color: white;">
+        style="background-color: #135880; color: white;" [disabled]="this.allTaxGroups.length >= 1">
         <mat-icon>add_circle</mat-icon>
         <span class="ml-2 mr-1">Nuevo Grupo</span>
     </button>

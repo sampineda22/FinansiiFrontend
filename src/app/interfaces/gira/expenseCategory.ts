@@ -9,7 +9,6 @@ export interface ExpenseCategory {
     isImageRequired?: boolean;
     status?: boolean;
     vendAccount?: string | null;
-    taxGroup?: string | null;
     companyCode?: string;
     expenseType?: ExpenseType | null;
 }

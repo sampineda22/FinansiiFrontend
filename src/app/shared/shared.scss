@@ -8,21 +8,26 @@
   top: 0;
   left: 0;
   right: 0;
-  background-image: url('../../assets/images/ui/wavy-line-header.svg');
-  /* Set SVG as background */
-  background-size: contain;
-  /* Ensure SVG fills the container */
-  background-repeat: no-repeat;
-  /* Prevent repetition */
-  background-color: rgba(28, 126, 207, 0.719);
+  background-color: #3991b1;/*rgba(28, 126, 207, 0.719)*/;
   border-bottom: 1px solid #ccc;
   border-radius: 4px 4px 0 0;
   padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  /* Make the container flex */
   align-items: center;
-  /* Center items vertically */
+  overflow: hidden;
+}
+
+.dialog-header-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('../../assets/images/ui/wavy-line-header.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.35; /* solo la imagen */
+  pointer-events: none;
 }
 
 .dialog-title {
@@ -32,4 +37,9 @@
   /* Set font size to 24px (adjust as needed) */
   margin: 0;
   /* Remove default margin */
+}
+
+.dialog-header-card > * {
+  position: relative;
+  z-index: 1;
 }

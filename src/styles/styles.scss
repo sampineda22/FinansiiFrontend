@@ -2,10 +2,160 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
+
 .swal2-popup .swal2-confirm {
   background-color: #3991b1 !important;
   color: #fff !important;
   border: none !important;
   box-shadow: none !important;
   opacity: 1 !important;
+}
+
+/* Estilo para hacer que el icono de la toolbar sea blanco */
+.p-image-toolbar .p-image-action,
+.p-image-toolbar .p-image-action .pi {
+  color: white !important;
+}
+
+.p-image-toolbar {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* DIALOG CONTAINER DESIGN*/
+/* Main dialog box: rounded corners and hidden overflow so header/body match cleanly */
+.custom-image-dialog.p-dialog {
+  border-radius: 14px !important;
+  overflow: hidden;
+}
+
+/* PrimeNG dialog header base style */
+.custom-image-dialog .p-dialog-header {
+  position: relative;
+  background-color: #3991b1; /* light blue base #69ace3*/
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+  padding: 13px 16px;
+  min-height: 38px;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* SVG/header texture overlay */
+.custom-image-dialog .p-dialog-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/images/ui/wavy-line-header.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.28; //0.32; /* controls how visible/dark the SVG pattern is */
+  pointer-events: none;
+}
+
+/* Dialog title text */
+.custom-image-dialog .p-dialog-title {
+  position: relative;
+  z-index: 1;
+  color: #f8fbff;
+  font-size: 16px;
+  font-weight: 400 !important; /* not bold */
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+/* Header icons container */
+.custom-image-dialog .p-dialog-header-icons {
+  position: relative;
+  z-index: 1;
+  gap: 0.25rem;
+}
+
+/* Header icons color */
+.custom-image-dialog .p-dialog-header-icon,
+.custom-image-dialog .p-dialog-header-icon .pi {
+  color: #f8fbff !important;
+}
+
+/* Header icon size/shape */
+.custom-image-dialog .p-dialog-header-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+}
+
+/* Header icon hover effect */
+.custom-image-dialog .p-dialog-header-icon:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+/* Dialog content area */
+.custom-image-dialog .p-dialog-content {
+  padding: 16px;
+  border-radius: 0 0 14px 14px;
+}
+
+/* IMAGE HOVERING EFFECT*/
+/* Wrapper around the image and overlay */
+.custom-image-dialog .image-preview-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.custom-image-dialog .image-preview-wrapper .p-image img,
+.custom-image-dialog .image-preview-wrapper .p-image-preview-container img,
+.custom-image-dialog .image-preview-wrapper img {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Dark overlay layer on top of the image */
+.custom-image-dialog .image-dark-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.22); /* darkness level */
+  opacity: 0; /* hidden by default */
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none; /* so clicks still go to the image */
+  z-index: 2;
+  border-radius: 4px;
+}
+
+/* Show dark overlay when hovering the image wrapper */
+.custom-image-dialog .image-preview-wrapper:hover .image-dark-overlay {
+  opacity: 1;
+}
+
+/* Make PrimeNG image containers align correctly with the overlay */
+.custom-image-dialog .image-preview-wrapper .p-image,
+.custom-image-dialog .image-preview-wrapper .p-image-preview-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+.custom-image-dialog .image-card {
+  height: 100%;
+  overflow: hidden;
+}
+
+.custom-image-dialog .dialog-grid > * {
+  min-height: 0;
+  min-width: 0;
+}
+
+.swal-dialog-front {
+  z-index: 999999 !important;
 }

@@ -19,7 +19,7 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
   allExpensesCategories: ExpenseCategory[] = [];
   allExpenseTypes: ExpenseCategory[] = [];
   dataSource = new MatTableDataSource<ExpenseCategory>(this.allExpensesCategories);
-  displayedColumns: string[] = ['number', 'typeName', 'name', 'isInvoiceRequired', 'isDescriptionRequired', 'isImageRequired', 'status', 'vendAccount', 'taxGroup', 'actions', 'eraseFilters'];
+  displayedColumns: string[] = ['number', 'typeName', 'name', 'isInvoiceRequired', 'isDescriptionRequired', 'isImageRequired', 'status', 'vendAccount', 'actions', 'eraseFilters'];
   itemsPerPage: number = 10;
   pageSize: number[] = [];
 
@@ -42,8 +42,6 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
   filteredStatusValues: boolean[] = [];
   vendAccountUniqueValues: string[] = [];
   filteredVendAccountValues: string[] = [];
-  taxGroupUniqueValues: string[] = [];
-  filteredTaxGroupValues: string[] = [];
 
   selectedFilters = {
     name: new Set<string>(),
@@ -52,8 +50,7 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
     isDescriptionRequired: new Set<boolean>(),
     isImageRequired: new Set<boolean>(),
     status: new Set<boolean>(),
-    vendAccount: new Set<string>(),
-    taxGroup: new Set<string>()
+    vendAccount: new Set<string>()
   };
   /**********************/
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -138,7 +135,6 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
     this.categoryForm = this._formBuilder.group({
       idExpenseType: new FormControl({ value: this.newExpenseCategory?.idExpenseType, disabled: false }, Validators.required),
       name: new FormControl({ value: this.newExpenseCategory?.name, disabled: false }, Validators.required),
-      taxGroup: new FormControl({ value: this.newExpenseCategory?.taxGroup, disabled: false }),
       vendAccount: new FormControl({ value: this.newExpenseCategory?.vendAccount, disabled: false }),
       isInvoiceRequired: new FormControl({ value: this.newExpenseCategory?.isInvoiceRequired, disabled: false }),
       isDescriptionRequired: new FormControl({ value: this.newExpenseCategory?.isDescriptionRequired, disabled: false }),
@@ -176,8 +172,6 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
     this.filteredStatusValues = [...this.statusUniqueValues];
     this.vendAccountUniqueValues = Array.from(new Set(this.allExpensesCategories.map(item => item.vendAccount)));
     this.filteredVendAccountValues = [...this.vendAccountUniqueValues];
-    this.taxGroupUniqueValues = Array.from(new Set(this.allExpensesCategories.map(item => item.taxGroup)));
-    this.filteredTaxGroupValues = [...this.taxGroupUniqueValues];
   }
 
   clearColumnFilter(column: string): void {
@@ -283,12 +277,6 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
 
   filterVendAccountValues(searchText: string): void {
     this.filteredVendAccountValues = this.vendAccountUniqueValues.filter(value =>
-      value.toString().includes(searchText)
-    );
-  }
-
-  filterTaxGroupValues(searchText: string): void {
-    this.filteredTaxGroupValues = this.taxGroupUniqueValues.filter(value =>
       value.toString().includes(searchText)
     );
   }

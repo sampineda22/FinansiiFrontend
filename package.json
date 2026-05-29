@@ -40,6 +40,8 @@
     "ngx-quill": "^25.0.0-quill2.0",
     "node-modules": "^1.0.1",
     "perfect-scrollbar": "1.5.5",
+    "primeicons": "7.0.0",
+    "primeng": "17.18.15",
     "quill": "1.3.7",
     "rxjs": "7.8.0",
     "sweetalert2": "11.10.8",

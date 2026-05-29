@@ -4,4 +4,5 @@ export interface ExpenseType {
     journal?: string;
     companyCode?: string;
     state?: boolean;
+    icon?: string;
 }

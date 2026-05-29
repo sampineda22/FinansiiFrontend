@@ -123,7 +123,7 @@ export class ExpensesTypesComponent implements AfterViewInit {
 
     this.typeForm = this._formBuilder.group({
       name: new FormControl({ value: this.newExpenseType?.name, disabled: false }, Validators.required),
-      journal: new FormControl({ value: this.newExpenseType?.journal, disabled: false }, Validators.required)
+      journal: new FormControl({ value: this.newExpenseType?.journal, disabled: expenseType?.id > 0 }, Validators.required)
     });
 
     const dialogRef = this.dialog.open(typeDialogTemplate, {

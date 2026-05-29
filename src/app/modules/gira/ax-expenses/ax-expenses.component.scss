@@ -32,3 +32,34 @@
   border-radius: 10px;
   line-height: 0;
 }
+
+.dialog-footer-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+:host ::ng-deep .rechazo-dialog .p-confirm-dialog-message {
+  margin-left: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .rechazo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+:host ::ng-deep .rechazo-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .rechazo-content textarea {
+  width: 100%;
+  resize: vertical;
+}

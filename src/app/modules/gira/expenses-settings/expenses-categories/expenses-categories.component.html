@@ -298,42 +298,6 @@
         <td mat-cell *matCellDef="let element"> {{element.vendAccount}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="taxGroup">
-        <th mat-header-cell *matHeaderCellDef> Grupo de Impuestos
-            <button mat-icon-button [matMenuTriggerFor]="taxGroupMenu">
-                <mat-icon>filter_list</mat-icon>
-            </button>
-            <mat-menu #taxGroupMenu="matMenu" class="custom-mat-menu">
-                <button mat-menu-item (click)="sortTable('taxGroup', 'asc');">
-                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
-                    A-Z
-                </button>
-                <button mat-menu-item (click)="sortTable('taxGroup', 'desc');">
-                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
-                    Z-A
-                </button>
-                <div (click)="$event.stopPropagation();">
-                    <mat-form-field style="width: 95%; margin-left: 2%;">
-                        <input matInput (input)="filterTaxGroupValues($event.target.value)"
-                            placeholder="Type to search" />
-                    </mat-form-field>
-                </div>
-                <button mat-menu-item (click)="clearColumnFilter('taxGroup');">
-                    Limpiar Filtro
-                </button>
-                <mat-divider></mat-divider>
-                <div (click)="$event.stopPropagation();">
-                    <mat-checkbox *ngFor="let value of filteredTaxGroupValues"
-                        [checked]="selectedFilters.taxGroup.has(value)"
-                        (change)="onFilterChange('taxGroup', value, $event.checked);">
-                        {{ value }}
-                    </mat-checkbox>
-                </div>
-            </mat-menu>
-        </th>
-        <td mat-cell *matCellDef="let element"> {{element.taxGroup}} </td>
-    </ng-container>
-
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let element">
@@ -388,12 +352,6 @@
                 </mat-form-field>
             </div>
             <div class="flex">
-                <mat-form-field class="flex-auto">
-                    <mat-label>Grupo de Impuestos</mat-label>
-                    <input style="width: 100%;" class="text-left" type="text" formControlName="taxGroup" matInput>
-                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
-                </mat-form-field>
-                &nbsp;
                 <mat-form-field class="flex-auto">
                     <mat-label>Código de Proveedor</mat-label>
                     <input style="width: 100%;" class="text-left" type="text" formControlName="vendAccount" matInput>

@@ -20,6 +20,16 @@ import { DecimalPipe } from '@angular/common';
 import { MY_FORMATS } from 'app/interfaces/general/myFormats';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { DialogModule } from 'primeng/dialog';
+import { ImageModule } from 'primeng/image';
+import { DividerModule } from 'primeng/divider';
+import { ApproveComponent } from './approve/approve.component';
+import { AXExpensesComponent } from './ax-expenses/ax-expenses.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ButtonModule } from 'primeng/button';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 const expensesSettingsRoutes: Route[] = [
   {
@@ -35,23 +45,50 @@ const historicalRoutes: Route[] = [
   }
 ];
 
+const approveRoutes: Route[] = [
+  {
+    path: 'app-approve',
+    component: ApproveComponent
+  }
+];
+
+const axExpensesRoutes: Route[] = [
+  {
+    path: 'app-ax-expenses',
+    component: AXExpensesComponent
+  }
+];
+
 @NgModule({
   providers: [DecimalPipe,
     { provide: MAT_DATE_LOCALE, useValue: 'es' },
     provideMomentDateAdapter(MY_FORMATS),
+    CurrencyByCompanyPipe,
+    ConfirmationService, 
+    MessageService
   ],
-  declarations: [ExpensesSettingsComponent, StatusPipe, ExpensesTypesComponent, ExpensesCategoriesComponent, ExpensesAccountsComponent, TaxGroupComponent, UsersComponent, HistoricalComponent, CurrencyByCompanyPipe],
+  declarations: [ExpensesSettingsComponent, StatusPipe, ExpensesTypesComponent, ExpensesCategoriesComponent, ExpensesAccountsComponent, TaxGroupComponent, UsersComponent, HistoricalComponent, CurrencyByCompanyPipe, ApproveComponent, AXExpensesComponent],
   imports: [
     SharedModule,
     RouterModule.forChild([
       ...expensesSettingsRoutes,
-      ...historicalRoutes]),
+      ...historicalRoutes,
+      ...approveRoutes,
+      ...axExpensesRoutes]),
     MatSlideToggleModule,
     MatTabsModule,
     MatSelectModule,
     NgxMatSelectSearchModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+
+    DialogModule,
+    ImageModule,
+    DividerModule,
+    ConfirmDialogModule,
+    ButtonModule,
+    ToastModule,
+    InputTextareaModule
   ],
   exports: [RouterModule]
 })
