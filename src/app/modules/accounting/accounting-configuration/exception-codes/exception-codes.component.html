@@ -1,0 +1,192 @@
+<button mat-flat-button class="mat-mdc-unelevated-button centered-button"
+    style="background-color: #135880; color: white;" (click)="openCreateCode(newCodeDialog)">
+    <mat-icon style="font-size: 20px;">add_circle</mat-icon>
+    <span class="ml-2 mr-1">Nuevo Código</span>
+</button>
+
+<table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="accountId">
+        <th mat-header-cell *matHeaderCellDef> Cuenta
+            <button mat-icon-button [matMenuTriggerFor]="accountIdMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #accountIdMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('accountId', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('accountId', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterAccountValues($event.target.value)"
+                            placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('accountId');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredAccountValues"
+                        [checked]="selectedFilters.accountId.has(value)"
+                        (change)="onFilterChange('accountId', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.accountId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef> Código de Transacción
+            <button mat-icon-button [matMenuTriggerFor]="codeMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #codeMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('code', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('code', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterCodeValues($event.target.value)" placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('code');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredCodeValues" [checked]="selectedFilters.code.has(value)"
+                        (change)="onFilterChange('code', value, $event.checked);">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="transactionType">
+        <th mat-header-cell *matHeaderCellDef> Tipo de Transacción
+            <button mat-icon-button [matMenuTriggerFor]="typeMenu">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <mat-menu #typeMenu="matMenu" class="custom-mat-menu">
+                <button mat-menu-item (click)="sortTable('transactionType', 'asc');">
+                    <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                    A-Z
+                </button>
+                <button mat-menu-item (click)="sortTable('transactionType', 'desc');">
+                    <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                    Z-A
+                </button>
+                <div (click)="$event.stopPropagation();">
+                    <mat-form-field style="width: 95%; margin-left: 2%;">
+                        <input matInput (input)="filterTypeValues($event.target.value)" placeholder="Type to search" />
+                    </mat-form-field>
+                </div>
+                <button mat-menu-item (click)="clearColumnFilter('transactionType');">
+                    Limpiar Filtro
+                </button>
+                <mat-divider></mat-divider>
+                <div (click)="$event.stopPropagation();">
+                    <mat-checkbox *ngFor="let value of filteredTypeValues"
+                        [checked]="selectedFilters.transactionType.has(value)"
+                        (change)="onFilterChange('transactionType', value, $event.checked);">
+                        {{ value | transactionType}}
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.transactionType | transactionType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let element">
+            <button (click)="deleteCode(element)" [color]="'warn'" mat-mini-fab aria-label="Eliminar" title="Eliminar">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="eraseFilters">
+        <th mat-header-cell *matHeaderCellDef>
+            <button (click)="resetFilters()" [disabled]="this.exceptionCodes.length <= 0"
+                style="background-color: #920101; color: white;" mat-mini-fab aria-label="Borrar todos los filtros">
+                <mat-icon>filter_list_off</mat-icon>
+            </button>
+        </th>
+        <td mat-cell *matCellDef="let element"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+</mat-paginator>
+
+<ng-template #newCodeDialog>
+    <div class="dialog-content">
+        <div class="dialog-header-card">
+            <h2 class="dialog-title">Nuevo Código de Excepción</h2>
+        </div>
+
+        <form [formGroup]="codeForm">
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Banco</mat-label>
+                    <mat-select formControlName="accountId">
+                        <mat-option *ngFor="let accountId of accountIds" [value]="accountId">
+                            {{accountId}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El banco es obligatorio </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Código de Transacción</mat-label>
+                    <input style="width: 100%;" class="text-left" type="text" matInput formControlName="code">
+                    <mat-error> El código es requerido </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Tipo de Transaccion</mat-label>
+                    <mat-select formControlName="transactionType">
+                        <mat-option *ngFor="let type of transactionTypes" [value]="type.value">
+                            {{type.value | transactionType}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                    <mat-error> El tipo de transacción es obligatorio </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+
+        <div class="flex">
+            <button style="margin-top: 3%;" class="flex-auto" [disabled]="codeForm.invalid" (click)="postCode()" mat-flat-button
+                [color]="'primary'">
+                <mat-icon>add</mat-icon>
+                <span class="ml-2 mr-1">Crear Código</span>
+            </button>
+        </div>
+    </div>
+</ng-template>

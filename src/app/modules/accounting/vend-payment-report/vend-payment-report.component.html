@@ -1,0 +1,259 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-xl md:text-4xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Reporte de Pago a Proveedores
+                    </div>
+                </div>
+
+                <mat-form-field style="width: 20%">
+                    <mat-label>Diarios</mat-label>
+                    <mat-select [(value)]="selectedJournal" (selectionChange)="getJournalLines($event.value)">
+                        <mat-option *ngFor="let journal of journals" [value]="journal.journalNum">
+                            @if(journal.journalNum == 'x') {
+                            {{journal.name}}
+                            }@else{
+                            {{journal.journalNum}} - {{journal.name}}
+                            }
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                &nbsp;
+
+                @if (showOtherJournal) {
+                <mat-form-field style="margin-left: 1%; width: 15%">
+                    <mat-label>Número de Diario</mat-label>
+                    <input matInput placeholder="Ex. LD-0168184" #journalInput
+                        (keydown.enter)="readJournalNum(journalInput.value)"
+                        (keydown.tab)="readJournalNum(journalInput.value)">
+                </mat-form-field>
+                }
+
+                <button [disabled]="selectedJournal == ''" (click)="getJournalLines(selectedJournal)">
+                    <mat-icon aria-hidden="false" aria-label="Refrescar" fontIcon="refresh"></mat-icon>
+                </button>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+
+                <button mat-flat-button class="mat-mdc-unelevated-button centered-button"
+                        (click)="createReport()" style="background-color: #106b04; color: white;"
+                        [disabled]="this.journalLines.length <= 0">
+                        <mat-icon>download</mat-icon>
+                        <span class="ml-2 mr-1">Descargar Reporte</span>
+                    </button>
+            </div>
+        </div>
+    </div>
+
+    <app-card>
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="voucher">
+                <th mat-header-cell *matHeaderCellDef> Asiento
+                    <button mat-icon-button [matMenuTriggerFor]="voucherMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #voucherMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('voucher', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('voucher', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterVoucherValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('voucher');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredVoucherValues"
+                                [checked]="selectedFilters.voucher.has(value)"
+                                (change)="onFilterChange('voucher', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.voucher}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Nombre del Proveedor
+                    <button mat-icon-button [matMenuTriggerFor]="nameMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #nameMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('name', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('name', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterNameValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('name');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredNameValues"
+                                [checked]="selectedFilters.name.has(value)"
+                                (change)="onFilterChange('name', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Descripción
+                    <button mat-icon-button [matMenuTriggerFor]="descriptionMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #descriptionMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('description', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('description', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterDescriptionValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('description');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredDescriptionValues"
+                                [checked]="selectedFilters.description.has(value)"
+                                (change)="onFilterChange('description', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="debit">
+                <th mat-header-cell *matHeaderCellDef> Débito
+                    <button mat-icon-button [matMenuTriggerFor]="debitMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #debitMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('debit', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('debit', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterDebitValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('debit')">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredDebitValues"
+                                [checked]="selectedFilters.debit.has(value)"
+                                (change)="onFilterChange('debit', value, $event.checked)">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.debit | currency: element.currencyCode}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paymentStatus">
+                <th mat-header-cell *matHeaderCellDef> Estado de Pago
+                    <button mat-icon-button [matMenuTriggerFor]="paymentStatusMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #paymentStatusMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('paymentStatus', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('paymentStatus', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterPaymentStatusValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('paymentStatus');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredPaymentStatusValues"
+                                [checked]="selectedFilters.paymentStatus.has(value)"
+                                (change)="onFilterChange('paymentStatus', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.paymentStatus}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="eraseFilters">
+                <th mat-header-cell *matHeaderCellDef>
+                    <button (click)="resetFilters()" [disabled]="this.journalLines.length <= 0"
+                        style="background-color: #920101; color: white;" mat-mini-fab
+                        aria-label="Borrar todos los filtros">
+                        <mat-icon>filter_list_off</mat-icon>
+                    </button>
+                </th>
+                <td mat-cell *matCellDef="let element"></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+        </mat-paginator>
+    </app-card>
+</div>
+
+<app-loading [body]="body"></app-loading>

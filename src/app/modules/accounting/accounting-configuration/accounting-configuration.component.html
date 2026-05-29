@@ -1,0 +1,42 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-xl md:text-4xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Configuración de Contabilidad
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-card>
+        <mat-tab-group>
+            <mat-tab label="Códigos de Excepción">
+                <mat-card class="info-card" style="margin-bottom: 1%;">
+                    <mat-card-content class="info-content">
+                        <mat-icon class="info-icon">info</mat-icon>
+                        <span>
+                            En esta sección se gestionan los códigos bancarios que no son tomados en cuenta
+                            al momento de realizar la creación de los diarios.
+                        </span>
+                    </mat-card-content>
+                </mat-card>
+                <app-exception-codes></app-exception-codes>
+            </mat-tab>
+            <mat-tab label="Fechas de Pago">
+                <mat-card class="info-card" style="margin-bottom: 1%;">
+                    <mat-card-content class="info-content">
+                        <mat-icon class="info-icon">info</mat-icon>
+                        <span>
+                            En esta sección se gestionan las fechas de pago de los proveedores las cuales se utilizan
+                            para programar los pagos pendientes.
+                        </span>
+                    </mat-card-content>
+                </mat-card>
+                <app-payment-dates></app-payment-dates>
+            </mat-tab>
+        </mat-tab-group>
+    </app-card>

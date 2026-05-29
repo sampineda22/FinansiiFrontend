@@ -1,0 +1,20 @@
+.info-card {
+  background-color: rgb(210, 226, 247);
+  border-radius: 9px;
+  border: 2px solid #374e79;
+  box-shadow: none;
+}
+
+.info-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: #374e79;
+  flex-shrink: 0;
+}

@@ -19,8 +19,21 @@ import {MatChipsModule} from '@angular/material/chips';
 import { DecimalPipe } from '@angular/common';
 import { TransactionTypePipe } from '@fuse/pipes/transaction-type.pipe';
 import { ProvidersReportComponent } from './providers-report/providers-report.component';
+import { VendPaymentReportComponent } from './vend-payment-report/vend-payment-report.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CertificateDepositComponent } from './certificate-deposit/certificate-deposit.component';
+import { AccountingConfigurationComponent } from './accounting-configuration/accounting-configuration.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatCardModule} from '@angular/material/card';
+import { ExceptionCodesComponent } from './accounting-configuration/exception-codes/exception-codes.component';
+import { PaymentDatesComponent } from './accounting-configuration/payment-dates/payment-dates.component';
+
+const vendPaymentReportRoutes: Route[] = [
+  {
+      path     : 'app-vend-payment-report',
+      component: VendPaymentReportComponent
+  }
+];
 
 const bankTransfersRoutes: Route[] = [
   {
@@ -43,15 +56,24 @@ const certificateDepositRoutes: Route[] = [
   }
 ];
 
+const accountingConfigurationRoutes: Route[] = [
+  {
+      path     : 'app-accounting-configuration',
+      component: AccountingConfigurationComponent
+  }
+];
+
 @NgModule({
   providers: [DatePipe, DecimalPipe],
-  declarations: [BankTransfersComponent, ProvidersReportComponent, CertificateDepositComponent, TransactionTypePipe],
+  declarations: [BankTransfersComponent, ProvidersReportComponent, CertificateDepositComponent, VendPaymentReportComponent, AccountingConfigurationComponent, TransactionTypePipe, ExceptionCodesComponent, PaymentDatesComponent],
   imports: [
     SharedModule, //Comparte los modulos más comunes
     RouterModule.forChild([
       ...providersReportRoutes,
       ...bankTransfersRoutes,
-      ...certificateDepositRoutes]),
+      ...certificateDepositRoutes,
+      ...accountingConfigurationRoutes,
+      ...vendPaymentReportRoutes]),
     MatIconModule,
     MatMenuModule,
     MatTableModule,
@@ -65,8 +87,10 @@ const certificateDepositRoutes: Route[] = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatChipsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTabsModule,
+    MatCardModule
   ],
-  exports: [RouterModule]
+  exports: [RouterModule, ExceptionCodesComponent, PaymentDatesComponent]
 })
 export class AccountingModule { }
