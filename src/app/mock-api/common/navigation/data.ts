@@ -37,6 +37,20 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_solid:ticket',
         link : '/accounting/app-certificate-deposit'
+    },
+    {
+        id   : 'app-vend-payment-report',
+        title: 'Reporte de Pagos a Proveedores',
+        type : 'basic',
+        icon : 'heroicons_solid:book-open',
+        link : '/accounting/app-vend-payment-report'
+    },
+    {
+        id   : 'app-accounting-configuration',
+        title: 'Configuración Contable',
+        type : 'basic',
+        icon : 'heroicons_solid:cog',
+        link : '/accounting/app-accounting-configuration'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

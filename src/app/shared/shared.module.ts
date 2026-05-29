@@ -5,12 +5,13 @@ import { CardComponent } from '@fuse/components/card/card.component';
 import { LoadingComponent } from '@fuse/components/loading/loading.component';
 import { MatDialogComponent } from '@fuse/components/mat-dialog/mat-dialog.component';
 import { CurrencyPipe } from '@fuse/pipes/currency.pipe';
+import { MonthNamePipe } from '@fuse/pipes/month-name.pipe';
 import { LoadingService } from '@fuse/components/loading/loading.service';
 import { CommaSeparationPipe } from '@fuse/pipes/comma-separation.pipe';
 import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
-    declarations: [CardComponent, LoadingComponent, MatDialogComponent, CurrencyPipe, CommaSeparationPipe],
+    declarations: [CardComponent, LoadingComponent, MatDialogComponent, CurrencyPipe, CommaSeparationPipe, MonthNamePipe],
     imports: [
         CommonModule,
         FormsModule,
@@ -27,6 +28,7 @@ import {MatDividerModule} from '@angular/material/divider';
         CurrencyPipe,
         LoadingComponent,
         CommaSeparationPipe,
+        MonthNamePipe,
         MatDividerModule
     ],
     providers: [LoadingService]
