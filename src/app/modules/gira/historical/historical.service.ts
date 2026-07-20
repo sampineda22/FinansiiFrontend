@@ -15,7 +15,7 @@ export class HistoricalService {
 
   getDetails$(companyCode: string, expenseType: number, startDate: Date | string, endDate: Date | string, salesAgent: string) {
     const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.get<any>(`${this.api}Historical/HistoricalDetails/${companyCode}/${expenseType}/${startDate}/${endDate}/${salesAgent}`, { headers });
+    return this.http.get<any>(`${this.api}Historical/HistoricalDetails/${companyCode}/${expenseType}/${startDate}/${endDate}?personalCode=${salesAgent}`, { headers });
   }
 
   downloadExcel$(companyCode: string, salesAgent: string, expenseType: number, startDate: Date | string, endDate: Date | string): Observable<HttpResponse<Blob>> {

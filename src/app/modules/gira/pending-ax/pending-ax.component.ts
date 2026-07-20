@@ -1,27 +1,27 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslocoService } from '@ngneat/transloco';
 import { ExpenseDetailsDto } from 'app/interfaces/gira/expenseDetailsDto';
-import { SharedService } from 'app/shared/shared.service';
-import { Subject } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { CurrencyByCompanyPipe } from '@fuse/pipes/currency-by-company.pipe';
-import Swal from 'sweetalert2';
-import { ApproveService } from './approve.service';
-import { HistoricalService } from '../historical/historical.service';
-import { LoadingService } from '@fuse/components/loading/loading.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Subject } from 'rxjs';
+import { PendingAXService } from './pending-ax.service';
+import { SharedService } from 'app/shared/shared.service';
+import Swal from 'sweetalert2';
+import { HistoricalService } from '../historical/historical.service';
+import { CurrencyByCompanyPipe } from '@fuse/pipes/currency-by-company.pipe';
+import { LoadingService } from '@fuse/components/loading/loading.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ApproveService } from '../approve/approve.service';
 
 @Component({
-  selector: 'app-approve',
-  templateUrl: './approve.component.html',
-  styleUrl: './approve.component.scss'
+  selector: 'app-pending-ax',
+  templateUrl: './pending-ax.component.html',
+  styleUrls: ['./pending-ax.component.scss']
 })
-export class ApproveComponent implements AfterViewInit, OnDestroy {
+export class PendingAXComponent implements AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();
   details: ExpenseDetailsDto[] = [];
   expenseDetailOpen: ExpenseDetailsDto | null = null;
@@ -32,11 +32,11 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
   iconName: string = '';
   serieNum: string = '';
   fuel: string = '';
-  rejectionMotive: string = '';
   previewImageUrl: string = '';
   exemptColumnName: string = '';
-  isRejected: boolean = false;
+  axMessage: string = '';
   displayImageDialog: boolean = false;
+  displayMessageDialog: boolean = false;
   detailForm: FormGroup;
   confirmDialog: ConfirmDialog;;
   pipe = new DatePipe('es-HN');
@@ -79,15 +79,14 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(private _translocoService: TranslocoService
-    , private _sharedService: SharedService
-    , private _formBuilder: FormBuilder
-    , public dialog: MatDialog
+    , private _pendingAxService: PendingAXService
     , private _approveService: ApproveService
+    , private _sharedService: SharedService
     , private _historicalService: HistoricalService
-    , private currencyByCompanyPipe: CurrencyByCompanyPipe
     , private loadingService: LoadingService
-    , public confirmationService: ConfirmationService
-    , private messageService: MessageService
+    , private currencyByCompanyPipe: CurrencyByCompanyPipe
+    , public dialog: MatDialog
+    , private _formBuilder: FormBuilder
   ) {
     this.detailForm = this._formBuilder.group({
       invoiceId: new FormControl({ value: '', disabled: true }),
@@ -101,7 +100,6 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
       name: new FormControl({ value: '', disabled: true }),
       description: new FormControl({ value: '', disabled: true }),
       creationDate: new FormControl({ value: '', disabled: true }),
-      rejectionMotive: new FormControl({ value: '', disabled: true }),
     });
   }
 
@@ -113,13 +111,13 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._translocoService.langChanges$.subscribe(() => {
       this.details = [];
       this.displayedColumns = this._historicalService.showColumns(true);
@@ -132,15 +130,15 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
         this.exemptColumnName = 'Importe Exento';
       }
 
-      this.getHistorical();
-    });
+      this.getPendingAXDetails();
+    })
   }
 
-  getHistorical(): void {
-    this._approveService.getPendingApprovals$(this._sharedService.getCompanyCode()).subscribe(
+  getPendingAXDetails(): void {
+    this._pendingAxService.getPendingAX$(this._sharedService.getCompanyCode()).subscribe(
       (data) => {
         if (data.data.length <= 0) {
-          Swal.fire("", "No se encontraron gastos por aprobar", "info");
+          Swal.fire("", "No se encontraron gastos pendientes por sincronizar en AX", "info");
           this.details = [];
         } else {
           this.details = data.data;
@@ -152,57 +150,16 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
       })
   }
 
-  aceptarRechazo(cd: ConfirmDialog) {
-    this.confirmDialog = cd;
-    if (!this.rejectionMotive.trim() || this.rejectionMotive.trim() === '') {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Campo requerido',
-        detail: 'Debe ingresar un motivo de rechazo'
-      });
-
-      return;
+  putStatus(element: ExpenseDetailsDto = null): void {
+    if(element != null){
+      this.expenseDetailOpen = element;
     }
-    cd.accept();
-  }
 
-  changeState(event: Event, state: string): void {
-    this.rejectionMotive = '';
-
-    if (state === 'R') {
-      this.confirmationService.confirm({
-        target: event.target as EventTarget,
-        header: 'Motivo de Rechazo',
-        message: '',
-
-        accept: () => {
-          /*this.messageService.add({
-            severity: 'info',
-            summary: 'Confirmado',
-            detail: 'Motivo registrado'
-          });*/
-          this.putStatus();
-        },
-
-        reject: () => {
-          /*this.messageService.add({
-            severity: 'error',
-            summary: 'Cancelado',
-            detail: 'Acción cancelada'
-          });*/
-        }
-      });
-    } else {
-      this.putStatus();
-    }
-  }
-
-  putStatus(): void {
-    this._approveService.putStatus$(this._sharedService.getCompanyCode(), this.expenseDetailOpen.id, this.rejectionMotive, this._sharedService.getPersonalCode()).subscribe(
+    this._approveService.putStatus$(this._sharedService.getCompanyCode(), this.expenseDetailOpen.id, "", this._sharedService.getPersonalCode()).subscribe(
       (data) => {
         try {
           this.displayImageDialog = false;
-          this.getHistorical();
+          //this.getPendingAXDetails();
           Swal.fire({
             title: 'Estado Actualizado',
             text: `${data.mensaje}`,
@@ -222,9 +179,10 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
             }
           });
         }
+        this.getPendingAXDetails();
       },
       (error) => {
-        console.log(error);
+        this.getPendingAXDetails();
         Swal.fire({
           title: 'Error',
           text: error.error.mensaje,
@@ -236,13 +194,17 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
       })
   }
 
+  messagePreview(element: ExpenseDetailsDto): void{
+    this.displayMessageDialog = true;
+    this.axMessage = element.axMessage == '' || element.axMessage == null ? 'Sin mensaje de AX.' : element.axMessage;
+  }
+
   openImagePreview(element: ExpenseDetailsDto): void {
     this.displayImageDialog = true;
     this.expenseDetailOpen = element;
     this.title = element.expenseCategoryName;
     this.subTitle = element.expenseCategoryName;
     this.iconName = element.icon;
-    this.isRejected = element.code === 'R';
     this.serieNum = element.seriesNum;
     this.fuel = element.fuelTypeName || '';
     this.previewImageUrl = '';
@@ -261,7 +223,6 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
       name: element.personalCode + " - " + element.name,
       description: element.description,
       creationDate: this.pipe.transform(element.creationDate, 'dd/MMM/yyyy'),
-      rejectionMotive: element.rejectionMotive == '' || element.rejectionMotive == null ? 'Sin motivo.' : element.rejectionMotive,
     });
 
     this._historicalService.getImage$(element.id, this._sharedService.getCompanyCode()).subscribe({

@@ -33,6 +33,11 @@ export class SharedService {
     return access_Logged.companyCode;
   }
 
+  getPersonalCode() {
+    const access_Logged: any = JSON.parse(localStorage.getItem('access_Logged'));
+    return access_Logged.personalCode;
+  }
+
   getUser() {
     const access_Logged: any = JSON.parse(localStorage.getItem('access_Logged') || 'null');
     return access_Logged?.userId ?? access_Logged?.user?.id ?? access_Logged?.user?.user ?? null;

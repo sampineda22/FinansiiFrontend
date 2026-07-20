@@ -1,0 +1,543 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="bg-card">
+        <div class="mx-auto px-6 sm:px-20">
+
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="text-2xl md:text-6xl font-bold tracking-tight leading-7 md:leading-snug truncate">
+                        Gastos Pendientes en AX
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <app-card>
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="expenseTypeName">
+                <th mat-header-cell *matHeaderCellDef> Tipo de Gasto
+                    <button mat-icon-button [matMenuTriggerFor]="expenseTypeMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #expenseTypeMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('expenseTypeName', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('expenseTypeName', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterExpenseTypeValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('expenseTypeName');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredExpenseTypeValues"
+                                [checked]="selectedFilters.expenseTypeName.has(value)"
+                                (change)="onFilterChange('expenseTypeName', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.expenseTypeName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="expenseCategoryName">
+                <th mat-header-cell *matHeaderCellDef> Categoría de Gasto
+                    <button mat-icon-button [matMenuTriggerFor]="expenseCategoryMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #expenseCategoryMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('expenseCategoryName', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('expenseCategoryName', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterExpenseCategoryValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('expenseCategoryName');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredExpenseCategoryValues"
+                                [checked]="selectedFilters.expenseCategoryName.has(value)"
+                                (change)="onFilterChange('expenseCategoryName', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.expenseCategoryName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="seriesNum">
+                <th mat-header-cell *matHeaderCellDef> Número de Serie
+                    <button mat-icon-button [matMenuTriggerFor]="seriesNumMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #seriesNumMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('seriesNum', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('seriesNum', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterSeriesNumValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('seriesNum');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredSeriesNumValues"
+                                [checked]="selectedFilters.seriesNum.has(value)"
+                                (change)="onFilterChange('seriesNum', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.seriesNum}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="invoiceId">
+                <th mat-header-cell *matHeaderCellDef> Número de Factura
+                    <button mat-icon-button [matMenuTriggerFor]="invoiceIdMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #invoiceIdMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('invoiceId', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('invoiceId', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterInvoiceIdValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('invoiceId');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredInvoiceIdValues"
+                                [checked]="selectedFilters.invoiceId.has(value)"
+                                (change)="onFilterChange('invoiceId', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.invoiceId}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Descripción
+                    <button mat-icon-button [matMenuTriggerFor]="descriptionMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #descriptionMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('description', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('description', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterDescriptionValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('description');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredDescriptionValues"
+                                [checked]="selectedFilters.description.has(value)"
+                                (change)="onFilterChange('description', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="gravadoAmount">
+                <th mat-header-cell *matHeaderCellDef> Importe Gravado
+                    <button mat-icon-button [matMenuTriggerFor]="gravadoAmountMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #gravadoAmountMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('gravadoAmount', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('gravadoAmount', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterGravadoValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('gravadoAmount');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredGravadoValues"
+                                [checked]="selectedFilters.gravadoAmount.has(value)"
+                                (change)="onFilterChange('gravadoAmount', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.gravadoAmount | currencyByCompany}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="exemptAmount">
+                <th mat-header-cell *matHeaderCellDef> {{exemptColumnName}}
+                    <button mat-icon-button [matMenuTriggerFor]="exemptAmountMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #exemptAmountMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('exemptAmount', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('exemptAmount', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterExemptValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('exemptAmount');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredExemptValues"
+                                [checked]="selectedFilters.exemptAmount.has(value)"
+                                (change)="onFilterChange('exemptAmount', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.exemptAmount | currencyByCompany}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="invoiceAmount">
+                <th mat-header-cell *matHeaderCellDef> Importe de Factura
+                    <button mat-icon-button [matMenuTriggerFor]="invoiceAmountMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #invoiceAmountMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('invoiceAmount', 'desc')">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            Mayor a Menor
+                        </button>
+                        <button mat-menu-item (click)="sortTable('invoiceAmount', 'asc')">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Menor a Mayor
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterInvoiceAmountValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('invoiceAmount');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredInvoiceAmountValues"
+                                [checked]="selectedFilters.invoiceAmount.has(value)"
+                                (change)="onFilterChange('invoiceAmount', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.invoiceAmount | currencyByCompany}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="invoiceDate">
+                <th mat-header-cell *matHeaderCellDef> Fecha de Factura </th>
+                <td mat-cell *matCellDef="let element"> {{element.invoiceDate | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Solicitante
+                    <button mat-icon-button [matMenuTriggerFor]="nameMenu">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <mat-menu #nameMenu="matMenu" class="custom-mat-menu">
+                        <button mat-menu-item (click)="sortTable('name', 'asc');">
+                            <mat-icon style="color: rgb(88, 172, 11);">swap_vert</mat-icon>
+                            A-Z
+                        </button>
+                        <button mat-menu-item (click)="sortTable('name', 'desc');">
+                            <mat-icon style="color: rgb(202, 148, 0);">swap_vert</mat-icon>
+                            Z-A
+                        </button>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-form-field style="width: 95%; margin-left: 2%;">
+                                <input matInput (input)="filterNameValues($event.target.value)"
+                                    placeholder="Type to search" />
+                            </mat-form-field>
+                        </div>
+                        <button mat-menu-item (click)="clearColumnFilter('name');">
+                            Limpiar Filtro
+                        </button>
+                        <mat-divider></mat-divider>
+                        <div (click)="$event.stopPropagation();">
+                            <mat-checkbox *ngFor="let value of filteredNameValues"
+                                [checked]="selectedFilters.name.has(value)"
+                                (change)="onFilterChange('name', value, $event.checked);">
+                                {{ value }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-mini-fab aria-label="Ver" title="Ver" (click)="openImagePreview(element)">
+                        <i class="fa-solid fa-eye fa-xl"></i>
+                    </button>
+                    &nbsp;
+                    <button mat-mini-fab aria-label="Mensaje de AX" title="Mensaje de AX"
+                        (click)="messagePreview(element)">
+                        <i class="fa-solid fa-comment"></i>
+                    </button>
+                    &nbsp;
+                    <button mat-mini-fab aria-label="Sincronizar" style="background-color: #ca9a16;" title="Sincronizar" (click)="putStatus(element)">
+                        <i class="fa-solid fa-rotate"></i>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="eraseFilters">
+                <th mat-header-cell *matHeaderCellDef>
+                    <button (click)="resetFilters()" [disabled]="this.details.length <= 0"
+                        style="background-color: #920101; color: white;" mat-mini-fab
+                        aria-label="Borrar todos los filtros">
+                        <mat-icon>filter_list_off</mat-icon>
+                    </button>
+                </th>
+                <td mat-cell *matCellDef="let element"></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="itemsPerPage" [pageSizeOptions]="pageSize" showFirstLastButtons>
+        </mat-paginator>
+    </app-card>
+</div>
+
+<p-dialog [(visible)]="displayMessageDialog" [modal]="true" [dismissableMask]="true" appendTo="body"
+    header="Mensaje de AX" styleClass="custom-image-dialog" [style]="{ width: '600px' }">
+
+    <div class="dialog-body">
+        <textarea [disabled]="true" style="width: 100%; color: #4d4d4d;" class="text-left" rows="1"
+            matInput>{{ axMessage }}</textarea>
+    </div>
+
+</p-dialog>
+
+<p-dialog [(visible)]="displayImageDialog" [modal]="true" [dismissableMask]="true" appendTo="body" header="Vista previa"
+    styleClass="custom-image-dialog" [style]="{ width: '1000px' }">
+
+    <div class="dialog-body">
+        <span style="display: block; font-size: xx-large; color: #061e4b; font-weight: bold;">
+            {{title}} <i [ngClass]="[iconName]"></i>
+        </span>
+        <span style="display: block; font-size: x-large; color: #69ace3; font-weight: normal;">
+            {{subTitle}}
+        </span>
+        &nbsp;
+        <!-- MAIN GRID -->
+        <div class="dialog-grid">
+            <!-- IMAGE -->
+            <div class="image-card">
+                <div class="image-preview-wrapper">
+                    <p-image [src]="previewImageUrl" [previewImageSrc]="previewImageUrl" [preview]="true"
+                        appendTo="body"
+                        [imageStyle]="{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', objectPosition: 'center' }">
+                    </p-image>
+
+                    <div class="image-dark-overlay"></div>
+                </div>
+            </div>
+
+            <!-- INFO PANEL -->
+            <div class="info-panel">
+                <span style="font-size: x-large; color: #69ace3; font-weight: normal;"><i
+                        class="fa-solid fa-circle-info"></i> Detalle</span>
+
+                <form [formGroup]="detailForm">
+                    <div class="flex">
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Fecha de Factura</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="invoiceDate" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                        &nbsp;
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Fecha de Creación</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="creationDate" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex">
+                        @if(serieNum){
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Número de Serie</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="seriesNum" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                        }
+                        &nbsp;
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Factura</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="invoiceId" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex">
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Importe Gravado</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="gravadoAmount" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                        &nbsp;
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Importe Exento</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="exemptAmount" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex">
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Importe de Factura</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="invoiceAmount" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                        &nbsp;
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Cuenta de Proveedor</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="vendAccount" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    @if(fuel){
+                    <div class="flex">
+                        <mat-form-field class="flex-auto custom-disabled-field">
+                            <mat-label>Tipo de Combustible</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="fuelType" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+                    }
+
+                    <div class="flex">
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Solicitante</mat-label>
+                            <input style="width: 100%; color: #4d4d4d;" class="text-left" type="text"
+                                formControlName="name" matInput>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex">
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Descripción</mat-label>
+                            <textarea style="width: 100%; color: #4d4d4d;" class="text-left" rows="1"
+                                formControlName="description" matInput></textarea>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- DOWNLOAD -->
+        <div class="download-container">
+            <button mat-mini-fab style="background-color: #106b04; color: white; margin-top: 3px;"
+                (click)="downloadImage()">
+                <i class="fa-solid fa-download"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="dialog-footer-actions">
+        <button mat-fab style="background-color: #ca9a16; color: white" aria-label="Sincronizar" title="Sincronizar en AX" (click)="putStatus()">
+            <i class="fa-solid fa-rotate"></i>
+        </button>
+    </div>
+</p-dialog>

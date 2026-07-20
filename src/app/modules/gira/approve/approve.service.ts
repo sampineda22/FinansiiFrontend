@@ -16,8 +16,8 @@ export class ApproveService {
     return this.http.get<any>(`${this.api}Approve/PendingApprovals/${companyCode}`, { headers });
   }
 
-  putStatus$(companyCode: string, id: number, rejectionMotive: string) {
+  putStatus$(companyCode: string, id: number, rejectionMotive: string, personalCode: string) {
     const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.put<any>(`${this.api}Approve/Status/${companyCode}/${id}/${rejectionMotive}`, { headers });
+    return this.http.put<any>(`${this.api}Approve/Status/${companyCode}/${id}/${personalCode}/${rejectionMotive}`, { headers });
   }
 }

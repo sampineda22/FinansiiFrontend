@@ -4,11 +4,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslocoService } from '@ngneat/transloco';
-import { ExpenseCategory } from 'app/interfaces/gira/expenseCategory';
+import { ExpenseCategory, ExpenseCategoryDto } from 'app/interfaces/gira/expenseCategory';
 import { SharedService } from 'app/shared/shared.service';
 import { ExpensesSettingsService } from '../expenses-settings.service';
 import Swal from 'sweetalert2';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ExpenseType } from 'app/interfaces/gira/expenseType';
 
 @Component({
   selector: 'app-expenses-categories',
@@ -16,9 +17,9 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
   styleUrl: './expenses-categories.component.scss'
 })
 export class ExpensesCategoriesComponent implements AfterViewInit {
-  allExpensesCategories: ExpenseCategory[] = [];
-  allExpenseTypes: ExpenseCategory[] = [];
-  dataSource = new MatTableDataSource<ExpenseCategory>(this.allExpensesCategories);
+  allExpensesCategories: ExpenseCategoryDto[] = [];
+  allExpenseTypes: ExpenseType[] = [];
+  dataSource = new MatTableDataSource<ExpenseCategoryDto>(this.allExpensesCategories);
   displayedColumns: string[] = ['number', 'typeName', 'name', 'isInvoiceRequired', 'isDescriptionRequired', 'isImageRequired', 'status', 'vendAccount', 'actions', 'eraseFilters'];
   itemsPerPage: number = 10;
   pageSize: number[] = [];
@@ -86,7 +87,7 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
     })
   }
 
-  postStatus(expenseCategory: ExpenseCategory, event: MatSlideToggleChange): void {
+  postStatus(expenseCategory: ExpenseCategoryDto, event: MatSlideToggleChange): void {
     const previousValue = !event.checked;
     expenseCategory.status = event.checked;
 
@@ -123,7 +124,7 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
     }
   }
 
-  openCategoryDialog(categoryDialogTemplate, expenseCategory: ExpenseCategory): void {
+  openCategoryDialog(categoryDialogTemplate, expenseCategory: ExpenseCategoryDto): void {
     this.allExpenseTypes = (this._expensesSettingsService.getAllExpensesTypes()).filter(x => x.state);
     this.newExpenseCategory = expenseCategory == null ? {} : structuredClone(expenseCategory);
     this.buttonText = "Crear";
@@ -160,7 +161,7 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
   setUniqueValues(): void {
     this.nameUniqueValues = Array.from(new Set(this.allExpensesCategories.map(item => item.name)));
     this.filteredNameValues = [...this.nameUniqueValues];
-    this.typeNameUniqueValues = Array.from(new Set(this.allExpensesCategories.map(item => item.expenseType.name)));
+    this.typeNameUniqueValues = Array.from(new Set(this.allExpensesCategories.map(item => item.typeName)));
     this.filteredTypeNameValues = [...this.typeNameUniqueValues];
     this.invoiceUniqueValues = Array.from(new Set(this.allExpensesCategories.map(item => item.isInvoiceRequired)));
     this.filteredInvoiceValues = [...this.invoiceUniqueValues];
@@ -194,7 +195,7 @@ export class ExpensesCategoriesComponent implements AfterViewInit {
           
           // Handle nested properties
           if (property === 'typeName') {
-            value = item.expenseType?.name;
+            value = item.typeName;
           } else {
             value = item[property];
           }

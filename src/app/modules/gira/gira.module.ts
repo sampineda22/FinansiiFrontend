@@ -11,7 +11,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { ExpensesAccountsComponent } from './expenses-settings/expenses-accounts/expenses-accounts.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { TaxGroupComponent } from './expenses-settings/tax-group/tax-group.component';
-import { UsersComponent } from './expenses-settings/users/users.component';
 import { HistoricalComponent } from './historical/historical.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -30,6 +29,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PendingAXComponent } from './pending-ax/pending-ax.component';
 
 const expensesSettingsRoutes: Route[] = [
   {
@@ -59,6 +59,13 @@ const axExpensesRoutes: Route[] = [
   }
 ];
 
+const pendingAXRoutes: Route[] = [
+  {
+    path: 'app-pending-ax',
+    component: PendingAXComponent
+  }
+];
+
 @NgModule({
   providers: [DecimalPipe,
     { provide: MAT_DATE_LOCALE, useValue: 'es' },
@@ -67,14 +74,15 @@ const axExpensesRoutes: Route[] = [
     ConfirmationService, 
     MessageService
   ],
-  declarations: [ExpensesSettingsComponent, StatusPipe, ExpensesTypesComponent, ExpensesCategoriesComponent, ExpensesAccountsComponent, TaxGroupComponent, UsersComponent, HistoricalComponent, CurrencyByCompanyPipe, ApproveComponent, AXExpensesComponent],
+  declarations: [ExpensesSettingsComponent, StatusPipe, ExpensesTypesComponent, ExpensesCategoriesComponent, ExpensesAccountsComponent, TaxGroupComponent, HistoricalComponent, CurrencyByCompanyPipe, ApproveComponent, AXExpensesComponent, PendingAXComponent],
   imports: [
     SharedModule,
     RouterModule.forChild([
       ...expensesSettingsRoutes,
       ...historicalRoutes,
       ...approveRoutes,
-      ...axExpensesRoutes]),
+      ...axExpensesRoutes,
+      ...pendingAXRoutes]),
     MatSlideToggleModule,
     MatTabsModule,
     MatSelectModule,

@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ExpenseCategory } from 'app/interfaces/gira/expenseCategory';
+import { ExpenseCategoryDto } from 'app/interfaces/gira/expenseCategory';
+import {ExpenseCategory} from 'app/interfaces/gira/expenseCategory';
 import { ExpenseAccount } from 'app/interfaces/gira/expenseAccount';
 import { ExpenseType } from 'app/interfaces/gira/expenseType';
 import { TaxGroup } from 'app/interfaces/gira/taxGroup';
 import { environment } from 'environments/environment.development';
-import { User } from 'app/interfaces/gira/user';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class ExpensesSettingsService {
 
   private api: string = environment.apiURL;
   public allExpensesTypes: ExpenseType[] = [];
-  public allExpensesCategories: ExpenseCategory[] = [];
+  public allExpensesCategories: ExpenseCategoryDto[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -26,11 +26,11 @@ export class ExpensesSettingsService {
     return this.allExpensesTypes;
   }
 
-  setAllExpensesCategories(list: ExpenseCategory[]) {
+  setAllExpensesCategories(list: ExpenseCategoryDto[]) {
     this.allExpensesCategories = list;
   }
   //#region ExpensesTypes
-  getAllExpensesCategories(): ExpenseCategory[] {
+  getAllExpensesCategories(): ExpenseCategoryDto[] {
     return this.allExpensesCategories;
   }
 
@@ -98,33 +98,6 @@ export class ExpensesSettingsService {
   postPutTaxGroup$(newTax: TaxGroup, companyCode: string) {
     const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
     return this.http.post<any>(`${this.api}ExpensesSettings/TaxGroup/${companyCode}`, newTax, { headers });
-  }
-  //#endregion
-
-  //#region Users
-  getUsers$(companyCode: string) {
-    const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.get<any>(`${this.api}ExpensesSettings/Users/${companyCode}`, { headers });
-  }
-
-  getEmployees$(companyCode: string) {
-    const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.get<any>(`${this.api}ExpensesSettings/Employees/${companyCode}`, { headers });
-  }
-
-  postUser$(user: User, companyCode: string) {
-    const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.post<any>(`${this.api}ExpensesSettings/User/${companyCode}`, user, { headers });
-  }
-
-  postUserState$(user: User) {
-    const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.post<any>(`${this.api}ExpensesSettings/UserState`, user, { headers });
-  }
-
-  resetPassword$(id: number, newPassword: string, companyCode: string) {
-    const headers = new HttpHeaders().append("authorization", localStorage.getItem("accessToken"));
-    return this.http.put<any>(`${this.api}ExpensesSettings/ResetPassword/${id}/${newPassword}/${companyCode}`, { headers });
   }
   //#endregion
 }

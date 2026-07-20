@@ -1,7 +1,3 @@
-import { ExpenseCategory } from "./expenseCategory"
-import { FuelType } from "./fuelType"
-import { Status } from "./status"
-
 export interface ExpenseDetailsDto {
     id: number
     expenseCategoryId: number
@@ -10,6 +6,9 @@ export interface ExpenseDetailsDto {
     statusId: number
     personalCode: string
     vendAccount: string
+    vendName?: string
+    vatNum?: string
+    currency?: string
     description?: string
     invoiceId: string
     seriesNum?: string
@@ -23,6 +22,7 @@ export interface ExpenseDetailsDto {
     rejectionMotive?: string
     journalNum?: string
     companyCode: string
+    axMessage?: string
     inUse: boolean
     expenseCategoryName?: string
     expenseTypeName?: string
