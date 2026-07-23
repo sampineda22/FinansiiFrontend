@@ -198,7 +198,7 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
   }
 
   putStatus(): void {
-    this._approveService.putStatus$(this._sharedService.getCompanyCode(), this.expenseDetailOpen.id, this.rejectionMotive, this._sharedService.getPersonalCode()).subscribe(
+    this._approveService.putStatus$(this._sharedService.getCompanyCode(), this.expenseDetailOpen.id, this.rejectionMotive, this._sharedService.getUser() ,this._sharedService.getPersonalCode()).subscribe(
       (data) => {
         try {
           this.displayImageDialog = false;

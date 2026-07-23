@@ -155,7 +155,7 @@ export class PendingAXComponent implements AfterViewInit, OnDestroy {
       this.expenseDetailOpen = element;
     }
 
-    this._approveService.putStatus$(this._sharedService.getCompanyCode(), this.expenseDetailOpen.id, "", this._sharedService.getPersonalCode()).subscribe(
+    this._approveService.putStatus$(this._sharedService.getCompanyCode(), this.expenseDetailOpen.id, "", this._sharedService.getUser(), this._sharedService.getPersonalCode()).subscribe(
       (data) => {
         try {
           this.displayImageDialog = false;
