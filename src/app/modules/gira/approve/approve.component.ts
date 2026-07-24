@@ -202,7 +202,6 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
       (data) => {
         try {
           this.displayImageDialog = false;
-          this.getHistorical();
           Swal.fire({
             title: 'Estado Actualizado',
             text: `${data.mensaje}`,
@@ -222,6 +221,7 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
             }
           });
         }
+        this.getHistorical();
       },
       (error) => {
         console.log(error);
@@ -233,6 +233,7 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
             container: 'swal-dialog-front'
           }
         });
+        this.getHistorical();
       })
   }
 
