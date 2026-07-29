@@ -106,7 +106,7 @@ export class HistoricalComponent implements AfterViewInit, OnDestroy {
     gravadoAmount: new Set<number>(),
     exemptAmount: new Set<number>(),
     invoiceAmount: new Set<number>(),
-    status: new Set<string>(),
+    statusName: new Set<string>(),
     name: new Set<string>()
   };
   //#endregion
@@ -581,7 +581,7 @@ export class HistoricalComponent implements AfterViewInit, OnDestroy {
 
   applyFilters(): void {
     let filteredData = this.details;
-
+    
     this.displayedColumns.forEach(property => {
       if (this.selectedFilters[property]?.size > 0) {
         filteredData = filteredData.filter(item => this.selectedFilters[property].has(item[property]));

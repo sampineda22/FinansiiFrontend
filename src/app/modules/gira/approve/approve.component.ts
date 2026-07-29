@@ -123,7 +123,7 @@ export class ApproveComponent implements AfterViewInit, OnDestroy {
     this._translocoService.langChanges$.subscribe(() => {
       this.details = [];
       this.displayedColumns = this._historicalService.showColumns(true);
-      this.displayedColumns = this.displayedColumns.filter(col => col !== 'status');
+      this.displayedColumns = this.displayedColumns.filter(col => col !== 'statusName');
       this.displayedColumns = this.displayedColumns.filter(col => col !== 'journalNum');
 
       if (this._sharedService.getCompanyCode() === 'IMGT') {

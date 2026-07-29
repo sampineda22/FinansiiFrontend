@@ -38,7 +38,7 @@ export class HistoricalService {
     var displayedColumns: string[] = [];
 
     const allColumns: string[] = ['number', 'expenseTypeName', 'expenseCategoryName', 'seriesNum', 'invoiceId', 'description', 'gravadoAmount', 'exemptAmount',
-      'invoiceAmount', 'invoiceDate', 'status', 'journalNum', 'actions', 'eraseFilters'];
+      'invoiceAmount', 'invoiceDate', 'statusName', 'journalNum', 'actions', 'eraseFilters'];
 
     if (showName) {
       allColumns.splice(allColumns.length-2, 0, 'name');

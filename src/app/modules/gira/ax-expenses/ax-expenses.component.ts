@@ -125,7 +125,7 @@ export class AXExpensesComponent implements AfterViewInit, OnDestroy {
     ngOnInit() {
         this._translocoService.langChanges$.subscribe(() => {
             this.displayedColumns = this._historicalService.showColumns(true);
-            this.displayedColumns = this.displayedColumns.filter(col => col !== 'status');
+            this.displayedColumns = this.displayedColumns.filter(col => col !== 'statusName');
 
             if (this._sharedService.getCompanyCode() === 'IMGT') {
                 this.exemptColumnName = 'Cantidad/Exento';
